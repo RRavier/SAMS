@@ -7,4 +7,6 @@ Users will need to edit only a few scripts based on the location of their data a
 
 The software assumes that the surfaces are aligned and simply connected. The former can be handled with external software such as Auto3DGM.
 
+This code has an external dependency on the hyperbolic_orbifolds by Noam Aigerman for the sphere topology registration phase.
+
 If using this software, please cite the following works:
