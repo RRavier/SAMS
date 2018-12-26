@@ -4,13 +4,9 @@ touch([workingPath 'MappingData/']);
 load([workingPath 'Names.mat']);
 load([workingPath 'isDisc.mat']);
 %% The below curvature options are ad hoc. Similar tuning must be done on any data
-options.ConfMaxLocalWidth = 8;
-options.GaussMaxLocalWidth = 10;
-options.GaussMinLocalWidth = 6;
-options.SmoothCurvatureFields = 3;
-options.NumDensityPts = 100;
+
 options.isDisc = isDisc;
-options.numGPLmks = 500;
+
 
 
 %% Get meshes and do initial, quick feature computations

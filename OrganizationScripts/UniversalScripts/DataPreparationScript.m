@@ -1,5 +1,4 @@
-
-
+addpath(genpath(pwd));
 disp('Setting Paths');
 [basePath,dataPath,workingPath] = PathSetting('Ankles');
 disp('Initializing Data Collection')
@@ -28,11 +27,6 @@ else
 end
 
 disp('Preparing meshes');
-switch isDisc
-    case 0      %Nondisc, assuming spheres for now
-        PrepareSpheres;
-    case 1
-        PrepareDiscs;
-end
+ComputeFeatures;
 
 disp('Finished preparing meshes, you may begin mapping now');

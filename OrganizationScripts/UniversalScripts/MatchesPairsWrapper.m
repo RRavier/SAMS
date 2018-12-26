@@ -7,8 +7,7 @@ for i = 1:length(Names)
 end
 frechMean = find(sum(GPDists.^2)==min(sum(GPDists.^2)));
 matchesPairs = cell(length(Names),1);
-baseLmks = 150;     %Tuned
-lmkIter = 50;       %Tuned
+
 disp('Computing Pairwise Matchings for Mesh:');
 for i = 1:length(Names)
     disp(i)
@@ -16,9 +15,10 @@ for i = 1:length(Names)
         numLmks = baseLmks;
         while true
         
-            [testMatches,~] = ExtractMatchesPairs(1,.984,.001,i,frechMean,numLmks,1,.05,.5,workingPath,isDisc);
+            [testMatches,~] = ExtractMatchesPairs(pathWtTemp,minPathWt,pathWtDecr,...
+                i,frechMean,numLmks,nbrSize,percDecr,minPerc,workingPath);
             testMatches = unique(testMatches,'rows');
-            if size(testMatches,1) >= 20 || numLmks == 500
+            if size(testMatches,1) >= minAlignMatches || numLmks == maxNumLmks
                 matchesPairs{i} = testMatches;
                 break;
             else
@@ -31,8 +31,8 @@ save([workingPath '/MappingData/matchesPairs.mat'],'matchesPairs');
 %pare down to at most 30 via euclidean FPS; start with first landmark as
 %seed as that is among most likely matches
 load([workingPath '/MappingData/matchesPairs.mat']);
-load([workingPath 'MappingData/ConformalMatches.mat']);
-maxNumMatches = 20;
+load([workingPath 'MappingData/FeatureMatches.mat']);
+
 
 frechMesh = meshList{frechMean};
 for i = 1:length(Names)
@@ -58,17 +58,6 @@ for i = 1:length(Names)
             newMatches = [newMatches;possibleMatches(nextInd,:)];
             possibleMatches(nextInd,:) = [];
         end
-%         curMeshDists = pdist2(curMesh.V(:,oldMatches(:,1))',curMesh.V(:,oldMatches(:,1))');
-%         frechMeshDists = pdist2(frechMesh.V(:,oldMatches(:,2))',frechMesh.V(:,oldMatches(:,2))');
-%         newMatches = 1:size(confMatchesPairs{i},1);
-%         lmkInds = 1:size(matchesPairs{i},1);
-%         for j = size(newMatches,2)+1:maxNumMatches
-%             testInds = lmkInds(~ismember(lmkInds,newMatches));
-%             testDists = sum(curMeshDists(newMatches,:).^2,1)+sum(frechMeshDists(newMatches,:).^2,1);
-%             testDists(newMatches) = 0;
-%             newMatches = [newMatches find(testDists == max(testDists))];
-%         end
-%         matchesPairs{i} = oldMatches(newMatches,:);
         matchesPairs{i} = newMatches;
     end
 end

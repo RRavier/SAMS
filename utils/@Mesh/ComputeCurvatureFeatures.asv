@@ -8,8 +8,7 @@ end
 SmoothCurvatureFields = getoptions(options,'SmoothCurvatureFields',3);
 ConfMaxLocalWidth = getoptions(options,'ConfMaxLocalWidth',8);
 GaussMaxLocalWidth = getoptions(options,'GaussMaxLocalWidth',10);
-MeanMinLocalWidth = getoptions(options,'MeanMinLocalWidth',8);
-DNEMaxLocalWidth = getoptions(options,'DNEMaxLocalWidth',8);
+MeanMinLocalWidth = getoptions(options,'GaussMinLocalWidth',6);
 ExcludeBoundary = getoptions(options,'ExcludeBoundary',1);
 Display = getoptions(options,'Display','off');
 

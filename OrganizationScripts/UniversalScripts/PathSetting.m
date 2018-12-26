@@ -1,5 +1,5 @@
 function [basePath,dataPath,workingPath] = PathSetting(dataset)
-%% Sets datapath and output path. Only change two immediate lines below
+%% Private method. Feel free to edit for convenience but not necessary and not called
 %  You may edit the other methods but please be aware they are meant for 
 %  private use.
 

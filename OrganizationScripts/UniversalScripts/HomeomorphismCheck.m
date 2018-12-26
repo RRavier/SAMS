@@ -49,6 +49,7 @@ if ~isempty(problemMeshes)
     result.isDisc = -1;
 end
 
+%In future this should be replaced with code that checks homology
 if ~isempty(badBoundaryMeshes)
     disp('ALERT: The manifold meshes do not have consistent topology. Please resolve before proceeding.');
     disp(['There are ' num2str(numDiscs) ' of those meshes with disc topology and ' ...

@@ -1,4 +1,3 @@
-numLmks = 300;      %Number of landmarks, editable parameter
 namesPath = [workingPath 'Names.mat'];
 MATPath = [workingPath 'ProcessedMAT/'];
 mappingPath = [workingPath 'MappingData/'];

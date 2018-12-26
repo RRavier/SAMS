@@ -24,14 +24,8 @@ function [matchedLmks,R]=ExtractMatchesPairs(temp,wtB,wtDecr,initMesh,...
 
 %% Load necessary variables
     names_path = [workingPath 'Names.mat'];
-    switch isDisc
-        case 0
-            dist_path = [workingPath 'GPDists.mat'];
-            maps_path = [workingPath 'MappingData/procMaps.mat'];
-        case 1
-            dist_path = [workingPath 'cPDists.mat'];
-            maps_path = '/ztmp/Dropbox/clusterResult_PNAS/cPMapsMatrix.mat';
-    end
+    dist_path = [workingPath 'GPDists.mat'];
+    maps_path = [workingPath 'MappingData/procMaps.mat'];
     flows_path = [workingPath 'Flows.mat'];
     samples_path = [workingPath 'ProcessedMAT/'];
 %% Don't unnecessarily run
