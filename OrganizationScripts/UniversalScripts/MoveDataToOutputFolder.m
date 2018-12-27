@@ -6,9 +6,14 @@ touch(rawOFFPath);
 touch(rawMATPath);
 Names = {};
 for i = 3:length(dataDir)
-    if strcmp(dataDir(i).name(end-2:end),'off')
+    if strcmp(dataDir(i).name(end-2:end),'off') || strcmp(dataDir(i).name(end-2:end),'obj')
         Names = [Names dataDir(i).name(1:end-4)];
-        G = Mesh('off',[dataPath dataDir(i).name]);
+        switch dataDir(i).name(end-2:end)
+            case 'off'
+                G = Mesh('off',[dataPath dataDir(i).name]);
+            case 'obj'
+                G = Mesh('obj',[dataPath dataDir(i).name]);
+        end
         G.Write([rawOFFPath dataDir(i).name(1:end-4) '.off'],'off');
         save([rawMATPath dataDir(i).name(1:end-4) '.mat'],'G');
     end

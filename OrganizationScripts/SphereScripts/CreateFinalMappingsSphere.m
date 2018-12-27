@@ -1,6 +1,6 @@
 rmpath('../../utils/');
 addpath(genpath('../../external/'));
-[~,~,workingPath] = PathSetting('Wrists');
+
 
 
 NamesPath = [workingPath 'Names.mat'];

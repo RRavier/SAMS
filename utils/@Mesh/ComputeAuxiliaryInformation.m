@@ -28,7 +28,7 @@ Aux.LB = G.ComputeCotanLaplacian;
 G.Aux = Aux;
 
 
-minds = [Aux.GaussMaxInds;Aux.GaussMinInds;Aux.ConfMaxInds];
+minds = [Aux.GaussMaxInds;Aux.MeanMinInds;Aux.ConfMaxInds;Aux.DNEMaxInds];
 minds = unique(minds);
 
 numDensityPts = getoptions(options,'NumDensityPts',100);

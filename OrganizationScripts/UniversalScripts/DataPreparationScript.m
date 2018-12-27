@@ -1,9 +1,16 @@
-addpath(genpath(pwd));
+addpath(genpath([codePath 'utils/']));
+addpath(genpath([codePath 'OrganizationScripts']));
 disp('Setting Paths');
-[basePath,dataPath,workingPath] = PathSetting('Ankles');
+EditableParameters;
+%[basePath,dataPath,workingPath] = PathSetting('Ankles');
 disp('Initializing Data Collection')
 if exist([workingPath 'Names.mat'])
-    disp('Data already exists in working folder');
+    load ([workingPath 'Names.mat'])
+    if length(Names) > 0
+        disp('Data already exists in working folder');
+    else
+        MoveDataToOutputFolder;
+    end
 else
     MoveDataToOutputFolder;
 end

@@ -11,17 +11,24 @@
 
    V = [];
    F = [];
-   %dumb fix to read object files from Doug, need something to stick
    line = fgets(fp); line = fgets(fp); line = fgets(fp); line = fgets(fp);     %skip down to relevant part
    while( ~feof( fp ))
        line = fgets(fp);
        line = strsplit(line);           %edit to fix problems with reading texture coordinates
        
         if strcmp(line{1},'v') % vertex
-              V = [V str2double(line{2}) str2double(line{3}) str2double(line{4})];
+              V = [V [str2double(line{2}); str2double(line{3}); str2double(line{4})]];
         elseif strcmp(line{1},'f')
            if( line{1}== 'f' ) % face
-              F = [F str2double(line{2}) str2double(line{3}) str2double(line{4})];
+              for q = 2:4
+                  face1 = strsplit(line{2},'/');
+                  face1 = str2double(face1{1});
+                  face2 = strsplit(line{3},'/');
+                  face2 = str2double(face2{1});
+                  face3 = strsplit(line{4},'/');
+                  face3 = str2double(face3{1});
+              end
+              F = [F [face1;face2;face3]];
            end
        end
    end

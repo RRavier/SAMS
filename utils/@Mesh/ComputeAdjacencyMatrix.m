@@ -1,12 +1,6 @@
 function [A,E] = ComputeAdjacencyMatrix(G)
 % Computes adjacency matrix
 
-%% Return if already exists
-if ~isempty(G.A)
-    A=G.A;
-    E = G.A;
-    return
-end
 
 %% Else go through computations
 V=G.V;

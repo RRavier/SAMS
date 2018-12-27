@@ -6,8 +6,13 @@ load([workingPath 'isDisc.mat']);
 %% The below curvature options are ad hoc. Similar tuning must be done on any data
 
 options.isDisc = isDisc;
-
-
+options.ConfMaxLocalWidth = ConfMaxLocalWidth;              
+options.GaussMaxLocalWidth = GaussMaxLocalWidth;           
+options.MeanMinLocalWidth = MeanMinLocalWidth;              
+options.DNEMaxLocalWidth = DNEMaxLocalWidth;               
+options.SmoothCurvatureFields = SmoothCurvatureFields;       
+options.NumDensityPts = NumDensityPts;                
+options.numGPLmks = numGPLmks;                    
 
 %% Get meshes and do initial, quick feature computations
 meshList = cell(1,length(Names));
@@ -18,7 +23,8 @@ for i = 1:length(Names)
     G.Nf = G.ComputeFaceNormals;
     G.Nv = G.F2V'*G.Nf';
     G.Nv = G.Nv'*diag(1./sqrt(sum((G.Nv').^2,1)));
-    G.NF = size(G.F,2);
+    G.nF = size(G.F,2);
+    G.nV = size(G.V,2);     %needed in case deletion after check
     meshList{i} = G;
 end
 

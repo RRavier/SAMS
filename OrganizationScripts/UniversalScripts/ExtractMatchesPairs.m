@@ -36,12 +36,7 @@ end
 load(names_path);  
 load(dist_path);
 
-switch isDisc
-    case 0
-        cPDistances = GPDists;
-    case 1
-        cPDistances = cPDistMatrix;
-end
+cPDistances = GPDists;
 load(maps_path);
 load(flows_path);
 

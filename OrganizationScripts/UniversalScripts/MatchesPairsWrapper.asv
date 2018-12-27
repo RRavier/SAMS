@@ -34,13 +34,8 @@ for i = 1:length(Names)
     if i ~= frechMean
         [bd_i,~] = meshList{i}.FindOrientedBoundaries;
         for j = 1:size(matchesPairs{i})
-            if ismember(matchesPairs{i}(j,1),bd_i) || ismember(matchesPairs{i}(j,2),bd_f)
-                rowsToDel = [rowsToDel j];
-            end
-        end
-        matchesPairs{i}(rowsToDel,:) = [];
+            if ismember(matchesPairs{i}(j,1))
     end
-    rowsToDel
 end
 save([workingPath '/MappingData/matchesPairs.mat'],'matchesPairs');
 %above save step done in case of errors
@@ -55,16 +50,6 @@ for i = 1:length(Names)
             continue;
         end
         curMesh = meshList{i};
-        
-        [bd_i,~] = meshList{i}.FindOrientedBoundaries;
-        rowsToDel = [];
-        for j = 1:size(featureMatchesPairs{i})
-            if ismember(featureMatchesPairs{i}(j,1),bd_i) || ismember(featureMatchesPairs{i}(j,2),bd_f)
-                rowsToDel = [rowsToDel j];
-            end
-        end
-        
-        featureMatchesPairs{i}(rowsToDel,:) = [];
         oldMatches = [featureMatchesPairs{i};matchesPairs{i}];
         possibleMatches = [matchesPairs{i};featureMatchesPairs{i}];
         newMatches = featureMatchesPairs{i};

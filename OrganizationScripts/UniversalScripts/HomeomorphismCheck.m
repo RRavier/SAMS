@@ -15,7 +15,15 @@ nonDiscBoundaryMeshes = {};
 numDiscs = 0; numNonDiscs = 0;
 isDisc = 2;
 for i = 1:length(Names)
+    i
     load([workingPath '/RawMAT/' Names{i} '.mat']);
+    delInds = [];
+    for q = 1:G.nV
+        if length(find(G.F==q)) == 0
+            delInds = [delInds q];
+        end
+    end
+    G.DeleteVertex(delInds);
     isManifoldResult = isManifold(G);
     
     %Check if manifold. If not, add to list. If yes, check boundary

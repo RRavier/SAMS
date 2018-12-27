@@ -13,7 +13,7 @@ for i = 1:length(Names)
     load([samplesPath Names{i} '.mat']);
     meshes{i} = G;
 end
-
+meshList = meshes;
 options.FeatureType = 'ConfMax';
 options.NumDensityPnts = 100;
 options.AngleIncrement = 0.01;
@@ -76,14 +76,12 @@ for i = 1:length(Names)
     rslt_cP = meshes{i}.ComputeContinuousProcrustesStable_FixedRotation(meshes{frechMean},options);
     
     if rslt_GP.cPdist < rslt_cP.cPdist
-        disp('GP dist lower')
         TextureCoords1{i} = rslt_GP.TextureCoords1;
         TextureCoords2{i} = rslt_GP.TextureCoords2;
         maps{i} = rslt_GP.cPmap;
         translation{i} = rslt_GP.translation;
         R{i} = rslt_GP.orthogonal;
     else
-        disp('cP dist lower')
         TextureCoords1{i} = rslt_cP.TextureCoords1;
         TextureCoords2{i} = rslt_cP.TextureCoords2;
         maps{i} = rslt_cP.cPmap;
@@ -156,6 +154,7 @@ end
 
 triArray = cell(length(Names),1);
 for i = 1:length(Names)
+    disp(i)
     if i ==frechMean
         triArray{i} = triangulation(meshes{i}.F',meshes{i}.Aux.UniformizationV(1:2,:)');
     else
@@ -216,9 +215,18 @@ dists = zeros(length(Names),length(Names));
 
 for i = 1:length(Names)
     for j = 1:length(Names)
-        dists(i,j) = norm(newMeshVerts{i}-newMeshVerts{j},'fro');
+        dists(i,j) = norm(newMeshList{i}.V-newMeshList{j}.V,'fro');
     end
 end
 [Y,~] = mdscale(dists,3);
 save('FinalDists.mat','dists'); save('MDSEmbedding.mat','Y');
 
+for i = 1:length(Names)-1
+disp(i)
+newMeshList{i}.draw;
+hold on;
+pause;
+newMeshList{16}.draw;
+pause;
+close all;
+end

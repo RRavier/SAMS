@@ -4,7 +4,7 @@ classdef Mesh < handle
 
 properties
     F           %matrix of faces
-    NF          %number of faces
+    nF          %number of faces
     Nf          %normal vectors of faces
     V           %matrix of vertices
     nV          %number of vertices

@@ -1,7 +1,6 @@
 load([workingPath 'MappingData/MatchesPairs_Thresheld.mat']);
-for i = 1:length(Names)
+for i = 17:length(Names)
     if i ~= frechMean
-        disp(GenusList{i})
         figure
         clear h
         disp(i)
