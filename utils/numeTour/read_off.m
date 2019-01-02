@@ -39,7 +39,7 @@ if cnt~=4*nface
     warning('Problem in reading faces.');
 end
 A = reshape(A, 4, cnt/4);
-face = A(2:4,:)+1;
+face = A(2:4,:);
 
 
 fclose(fid);

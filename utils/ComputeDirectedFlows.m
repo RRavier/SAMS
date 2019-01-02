@@ -20,14 +20,12 @@ for i = 1:m
         Flows{i,j} = sparse(m,n);
         if i ~= j
             dummy = sparse(m,n);
-            parfor k = 1:m
+            d_i = graphshortestpath(sparse(dists),i);
+            d_j = graphshortestpath(sparse(dists),j);
+            for k = 1:m
                 for q = 1:n
-                    d_ik = graphshortestpath(sparse(dists),i,k);
-                    d_iq = graphshortestpath(sparse(dists),i,q);
-                    if d_ik < d_iq
-                        d_jk = graphshortestpath(sparse(dists),j,k);
-                        d_jq = graphshortestpath(sparse(dists),j,q);
-                        if d_jk > d_jq
+                    if d_i(k) < d_i(q)
+                        if d_j(k) > d_j(q)
                             dummy(k,q) = 1;
                         end
                     end
