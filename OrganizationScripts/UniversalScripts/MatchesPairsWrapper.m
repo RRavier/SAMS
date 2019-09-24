@@ -40,7 +40,6 @@ for i = 1:length(Names)
         end
         matchesPairs{i}(rowsToDel,:) = [];
     end
-    rowsToDel
 end
 save([workingPath '/MappingData/matchesPairs.mat'],'matchesPairs');
 %above save step done in case of errors
@@ -51,7 +50,8 @@ load([workingPath 'MappingData/FeatureMatches.mat']);
 frechMesh = meshList{frechMean};
 for i = 1:length(Names)
     if i ~= frechMean
-        if size(matchesPairs{i},1) <= maxNumMatches
+        if (size(matchesPairs{i},1)+size(featureMatchesPairs{i},1)) <= maxNumMatches
+            matchesPairs{i} = [matchesPairs{i};featureMatchesPairs{i}];
             continue;
         end
         curMesh = meshList{i};

@@ -1,5 +1,5 @@
-rmpath('../../utils/');
-addpath(genpath('../../external/'));
+rmpath([codePath '/utils/']);
+addpath(genpath([codePath '/external/hyperbolic_orbifolds/']));
 
 
 
@@ -7,8 +7,6 @@ NamesPath = [workingPath 'Names.mat'];
 load(NamesPath);
 load([workingPath 'GPDists.mat']);
 frechMean = find(min(sum(GPDists.^2))==sum(GPDists.^2));
-%offFiles = dir([GenusPath '\SphereOFF\*.off']);
-%landmarkFiles = dir([GenusPath '\sphere_landmarks\*.txt']);
 flatteners = {};
 flag = 0;
 
@@ -51,6 +49,8 @@ for i = 1:length(Names)
         barCoordsList{i} = mapList{i}.barCoords{2,1};
     end
 end
+addpath(genpath([codePath '/utils/']));
+rmpath([codePath '/external/hyperbolic_orbifolds/']);
 meshList = cell(length(Names),1);
 for i = 1:length(Names)
     load([workingPath 'ProcessedMAT/' Names{i} '.mat']);
@@ -80,7 +80,7 @@ dists = zeros(length(Names),length(Names));
 
 for i = 1:length(Names)
     for j = 1:length(Names)
-        dists(i,j) = norm(newMeshList{i}.V - newMeshList{j}.V);
+        dists(i,j) = norm(newMeshList{i}.V - newMeshList{j}.V,'fro');
     end
 end
 [Y,~] = mdscale(dists,3);

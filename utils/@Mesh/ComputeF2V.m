@@ -1,5 +1,4 @@
 function F2V = ComputeF2V(G)
-
 nf = size(G.F,2);
 nv = size(G.V,2);
 I = [G.F(1,:),G.F(2,:),G.F(3,:)];

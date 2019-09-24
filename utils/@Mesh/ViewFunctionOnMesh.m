@@ -11,11 +11,12 @@ function ViewFunctionOnMesh(G, color_value, options)
 %   Feb 5, 2015
 %
 if nargin < 3
+
     options.mode= 'rb';
 end
 
-if ~isfield(options, 'mode')
-    if ~strcmp(options.mode,'native') && ~strcmp(options.mode,'rb')
+if isfield(options, 'mode')
+    if ~strcmpi(options.mode,'native') && ~strcmpi(options.mode,'rb')
         options.mode = 'rb';
     end
 else
@@ -28,12 +29,12 @@ if strcmpi(options.mode, 'rb')
     lb = [0.9 0.9 0.8];
     
     pos = zeros(size(color_value));
-    pos(color_value>0) = color_value(color_value>0);
+    pos(color_value>=0) = color_value(color_value>=0);
     neg = pos-color_value;
     pos = pos/max(pos);
     neg = neg/max(neg);
     
-    color_data(color_value>0, :) = pos(color_value>0, :)*ub_pos + (1-pos(color_value>0, :))*lb;
+    color_data(color_value>=0, :) = pos(color_value>=0, :)*ub_pos + (1-pos(color_value>=0, :))*lb;
     color_data(color_value<0, :) = neg(color_value<0, :)*ub_neg + (1-neg(color_value<0, :))*lb;
 elseif strcmpi(options.mode, 'native')
     color_data = color_value;

@@ -15,10 +15,12 @@ end
 
 ProcessedSampNumb = length(InitialSamples);
 VertSampInd = [InitialSamples, zeros(1,SampNumb-ProcessedSampNumb)];
+progressbar
 for k=(ProcessedSampNumb+1):SampNumb
-    progressbar(k,SampNumb,20);
+    progressbar((k-ProcessedSampNumb)/(SampNumb-ProcessedSampNumb));
     [~,VertSampInd(k)] = max(G.PerformFastMarching(VertSampInd(1:(k-1))));
 end
+close all
 
 end
 

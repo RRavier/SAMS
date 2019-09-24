@@ -1,6 +1,6 @@
 addpath(genpath([codePath 'utils/']));
 addpath(genpath([codePath 'OrganizationScripts']));
-rmpath(genpath('./external/'))  %Sanity check: methods in hyp_orb package different
+rmpath(genpath('./external/'))  %Sanity check: methods in hyp_orb p
 disp('Setting Paths');
 EditableParameters;
 %[basePath,dataPath,workingPath] = PathSetting('Ankles');

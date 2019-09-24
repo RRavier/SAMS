@@ -1,5 +1,6 @@
 load([workingPath 'MappingData/MatchesPairs_Thresheld.mat']);
-for i = 17:length(Names)
+
+for i = 1:length(Names)
     if i ~= frechMean
         figure
         clear h

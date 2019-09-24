@@ -47,8 +47,6 @@ mData.nonManifoldBoundary = [];
 %     more nor less!!!
 I = [F(1,:), F(2,:), F(3,:), F(2,:), F(3,:), F(1,:)];
 J = [F(2,:), F(3,:), F(1,:), F(1,:), F(2,:), F(3,:)];
-size(I)
-size(J)
 S = ones(1,6*Nf);
 edges = sparse(I,J,S);
 [i,j] = find(edges > 2);

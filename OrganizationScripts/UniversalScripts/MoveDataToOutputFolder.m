@@ -5,6 +5,7 @@ rawMATPath = [workingPath '/RawMAT/'];
 touch(rawOFFPath);
 touch(rawMATPath);
 Names = {};
+progressbar
 for i = 3:length(dataDir)
     if strcmp(dataDir(i).name(end-2:end),'off') || strcmp(dataDir(i).name(end-2:end),'obj')
         Names = [Names dataDir(i).name(1:end-4)];
@@ -17,6 +18,7 @@ for i = 3:length(dataDir)
         G.Write([rawOFFPath dataDir(i).name(1:end-4) '.off'],'off');
         save([rawMATPath dataDir(i).name(1:end-4) '.mat'],'G');
     end
+    progressbar((i-2)/(length(dataDir)-2))
 end
 save([workingPath 'Names.mat'],'Names');
 load([basePath 'GPDMat_high.mat']);

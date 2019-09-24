@@ -15,7 +15,6 @@ nonDiscBoundaryMeshes = {};
 numDiscs = 0; numNonDiscs = 0;
 isDisc = 2;
 for i = 1:length(Names)
-    i
     load([workingPath '/RawMAT/' Names{i} '.mat']);
     delInds = [];
     for q = 1:G.nV

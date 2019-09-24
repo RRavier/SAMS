@@ -38,6 +38,11 @@ if nargin > 0       %This conditional is private and intended for author but can
                 dataPath = 'D://Work/ToothAndClaw/ToothAndClawData/AnkleWrist/HandOFFOutput/aligned/OFF/';
                 workingPath = 'D://Dropbox/TeethData/AnkleWrist/Wrists/';
             end
+        case 'HDM'
+            if isunix
+            else
+                basePath = 'D://Dropbox/TeethData/HDM/';
+            end
         case 'Prime'
         case 'Tali'
     end

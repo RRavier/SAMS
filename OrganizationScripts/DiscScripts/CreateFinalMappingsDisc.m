@@ -127,7 +127,7 @@ totalPoints = meshes{frechMean}.Aux.UniformizationV(1:2,:)';
 
 totalVertList = (1:size(totalPoints,1))';
 norm2TotalPoints = totalPoints(:,1).^2 + totalPoints(:,2).^2;
-totalToRemove = totalVertList(norm2TotalPoints > .9^2);
+totalToRemove = totalVertList(norm2TotalPoints > .85^2);
 totalPoints(totalToRemove,:) = [];
 
 dTri = delaunay(totalPoints);
@@ -219,14 +219,5 @@ for i = 1:length(Names)
     end
 end
 [Y,~] = mdscale(dists,3);
-save('FinalDists.mat','dists'); save('MDSEmbedding.mat','Y');
+save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
 
-for i = 1:length(Names)-1
-disp(i)
-newMeshList{i}.draw;
-hold on;
-pause;
-newMeshList{16}.draw;
-pause;
-close all;
-end
