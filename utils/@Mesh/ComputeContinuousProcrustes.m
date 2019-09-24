@@ -118,7 +118,6 @@ end
 if ~isfield(GM,'BV')
     [GM.BV,GM.BE] = GM.FindBoundaries();
 end
-size(orig)
 THETA = cart2pol(orig(1,GM.BV),orig(2,GM.BV));
 regIdx = find(~isnan(compl(TextureCoords1(:,GM.BV))));
 nanIdx = find(isnan(compl(TextureCoords1(:,GM.BV))));

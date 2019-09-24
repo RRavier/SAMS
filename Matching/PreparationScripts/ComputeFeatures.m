@@ -29,12 +29,15 @@ for i = 1:length(Names)
     meshList{i} = G;
 end
 
-
+%% Do complex feature computations and save
+disp('Computing surface features');
+progressbar
 for i = 1:length(Names)
-    disp(['Computing features for ' Names{i}]);
+    progressbar(i/length(Names));
     [meshList{i},auxList{i}] = meshList{i}.ComputeAuxiliaryInformation(options);
 end
-
+close all
+disp('Saving')
 for i = 1:length(Names)
     G = meshList{i};
     meshList{i}.Aux = auxList{i};

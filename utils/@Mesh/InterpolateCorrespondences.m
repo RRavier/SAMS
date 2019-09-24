@@ -60,15 +60,16 @@ end
 if ~isfield(GM,'BV')
     [GM.BV,GM.BE] = GM.FindBoundaries();
 end
-size(orig)
 THETA = cart2pol(orig(1,GM.BV),orig(2,GM.BV));
 regIdx = find(~isnan(compl(TextureCoords1(:,GM.BV))));
 nanIdx = find(isnan(compl(TextureCoords1(:,GM.BV))));
+
 newTHETA = cart2pol(TextureCoords1(1,GM.BV(regIdx)),TextureCoords1(2,GM.BV(regIdx)));
 %%%%%%%% THETA(regIdx) ---> newTHETA
 %%%%%%%% THETA(nanIdx) ---> ??
 interpBVTextureCoords = interp1(THETA(regIdx),newTHETA,THETA(nanIdx),'spline');
 [X,Y] = pol2cart(interpBVTextureCoords,1);
+
 TextureCoords1(:,GM.BV(nanIdx)) = [X;Y];
 TextureCoords1(:,isnan(compl(TextureCoords1))) = orig(:,isnan(compl(TextureCoords1)));
 %TextureCoords2_kdtree = kdtree_build(TextureCoords2');
