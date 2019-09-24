@@ -1,4 +1,3 @@
-clear all
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% setup parameters in this section 
@@ -19,7 +18,7 @@ finNumPts = 256;                        %final sampling for second pass
 ssType = 'FPS'; %%% 'FPS' | 'GPR'       %how to choose psuedolandmarks
                                         %FPS = farthest point sampling
                                         %GPR = Gaussian process landmarks
-type = 'MST'; %%% 'MST' | 'SPC' | 'SDP' %how to synchronize alignments
+type = 'SDP'; %%% 'MST' | 'SPC' | 'SDP' %how to synchronize alignments
                                         %MST = minimum spanning tree
                                         %SPC = spectral relaxation
                                         %SDP = semidefinite program
@@ -35,26 +34,3 @@ n_jobs = 120;                           %Number of jobs, not relevant for
 %Email address to notify for completion in cluster job
 email_notification = 'rravier@math.duke.edu'; 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% NO NEED TO MODIFY ANYTHING OTHER THAN THIS FILE!
-
-%Find path of SAMS in system
-str = mfilename('fullpath');
-if ispc
-    SAMSPath = strsplit(str,'SAMS\');
-    SAMSPath = [SAMSPath{1} 'SAMS\'];
-else
-    SAMSPath = strsplit(str,'SAMS/');
-    SAMSPath = [SAMSPath{1} 'SAMS/'];
-end
-
-%Clear path of previously existing directory
-%Path of Aligner
-codePath= [SAMSPath 'Alignment/' AlignerName '/'];
-rmpath([codePath 'utils']); rmpath(['codePath 'Matching']);
-rmpath([codePath 'Statistics']); rmpath([codePath OrganizationScripts]);
-path(pathdef);
-path(path, genpath([codePath 'software']), genpath([codePath 'code']));
-
-%Set mosek path
-setenv('MOSEKLM_LICENSE_FILE', [codePath 'software/mosek/mosek.lic'])

@@ -1,5 +1,5 @@
-rmpath([codePath '/utils/']);
-addpath(genpath([codePath '/external/hyperbolic_orbifolds/']));
+rmpath(genpath([SAMSPath '/utils/']));
+addpath(genpath([SAMSPath 'Matching/external/']));
 
 
 
@@ -49,8 +49,8 @@ for i = 1:length(Names)
         barCoordsList{i} = mapList{i}.barCoords{2,1};
     end
 end
-addpath(genpath([codePath '/utils/']));
-rmpath([codePath '/external/hyperbolic_orbifolds/']);
+addpath(genpath([SAMSPath '/utils/']));
+rmpath(genpath([SAMSPath 'Matching/external/']));
 meshList = cell(length(Names),1);
 for i = 1:length(Names)
     load([workingPath 'ProcessedMAT/' Names{i} '.mat']);

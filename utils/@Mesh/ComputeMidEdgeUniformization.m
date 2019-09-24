@@ -2,29 +2,6 @@ function [uniV,uniF,vertArea] = ComputeMidEdgeUniformization(G)
 %COMPUTEMIDEDGEUNIFORMIZATION Summary of this function goes here
 %   Detailed explanation goes here
 
-if isunix       %Linux
-    data_path = '/ztmp/Dropbox/TeethData/PNAS/';
-    samples_path = [data_path 'cleaned_mat/'];
-    names_path = [data_path 'Names.mat'];
-    mesh_path = [data_path 'cleaned_meshes/'];
-    output_path = [data_path 'cleaned_mat_boundary_fixed/'];
-    landmarks_path = [data_path 'landmarks_teeth.mat'];
-elseif ispc     %Windows
-    data_path = 'E://Dropbox/TeethData/PNAS/'; 
-    samples_path = [data_path 'cleaned_mat/'];
-    names_path = [data_path 'Names.mat'];
-    mesh_path = [data_path 'cleaned_meshes/'];
-    output_path = [data_path 'cleaned_mat_boundary_fixed/'];
-    landmarks_path = [data_path 'landmarks_teeth.mat'];
-else            %MacOS
-    data_path = '';
-    samples_path = [data_path 'cleaned_mat/'];
-    names_path = [data_path 'Names.mat'];
-    mesh_path = [data_path 'cleaned_meshes/'];
-    output_path = [data_path 'cleaned_mat_boundary_fixed/'];
-    landmarks_path = [data_path 'landmarks_teeth.mat'];
-end
-
 
 % SmoothCurvatureFields = getoptions(options,'SmoothCurvatureFields',10);
 % DensityLocalWidth = getoptions(options,'DensityLocalWidth',5);

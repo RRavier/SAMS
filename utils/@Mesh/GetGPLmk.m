@@ -35,10 +35,7 @@ fullPhi = sparse(repmat(1:G.nV,1,BNN+1),idx,exp(-dist.^2/bandwidth),G.nV,G.nV);
 % PDistMat = squareform(pdist(G.V'));
 % fullPhi = exp(-PDistMat.^2/bandwidth);
 
-disp('Constructing full kernel......');
-tic;
 fullMatProd = fullPhi * sparse(1:G.nV,1:G.nV,Lambda,G.nV,G.nV) * fullPhi;
-disp(['full kernel constructed in ' num2str(toc) ' sec.']);
 
 KernelTrace = diag(fullMatProd);
 GPLmkIdx = zeros(1,numLmk);
@@ -47,10 +44,7 @@ invKn = zeros(numLmk);
 
 cback = 0;
 for j=1:numLmk
-    for cc=1:cback
-        fprintf('\b');
-    end
-    cback = fprintf('Landmark: %4d\n',j);
+    
     
     if j == 1
         ptuq = KernelTrace;

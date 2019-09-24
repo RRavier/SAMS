@@ -1,4 +1,4 @@
-function [rslt] = ComputeContinuousProcrustesStable_FixedRotation(GM,GN,options)
+function [rslt] = InterpolateCorrespondences(GM,GN,options)
 %COMPUTECONTINUOUSPROCRUSTES: Compute cP distance between GM and GN. Output
 %contians
 %   rslt.Gname1:            name of the first mesh
@@ -25,87 +25,11 @@ if nargin<3
     options.MaxDistTol = 8;    %This will be replaced with weighted adjacency in future
     options.NumDensityPnts = 100;
 end
-ProgressBar = getoptions(options,'ProgressBar','off');
 
-%%% feature type for matching
-FeatureType = getoptions(options,'FeatureType','ConfMax');
-NumGPLmks = getoptions(options,'NumDensityPnts',250);
-MaxDistTol = getoptions(options,'MaxDistTol',7);
-NumDensityPnts = getoptions(options,'NumDensityPts',100);
-switch FeatureType
-    case 'ADMax'
-        FeaturesM = GM.Aux.ADMaxInds;
-        FeaturesN = GN.Aux.ADMaxInds;
-    case 'GaussMax'
-        FeaturesM = GM.Aux.GaussMaxInds;
-        FeaturesN = GN.Aux.GaussMaxInds;
-    case 'ConfMax'
-        FeaturesM = GM.Aux.ConfMaxInds;
-        FeaturesN = GN.Aux.ConfMaxInds;
-    case 'Landmarks'
-        FeaturesM = GM.Aux.Landmarks;
-        FeaturesN = GN.Aux.Landmarks;
-end
-
-if length(FeaturesM) < 3 || length(FeaturesN) < 3
-    disp('WARNING: Not enough features for matching. Computing candidate GP features');
-    FeaturesM = GM.GetGPLmk(10);
-    FeaturesN = GN.GetGPLmk(10);
-end
-FeaturesMCoords = compl(GM.Aux.UniformizationV(:,FeaturesM));
-FeaturesNCoords = compl(GN.Aux.UniformizationV(:,FeaturesN));
-map_12 = knnsearch(GN.V(:,FeaturesN)',GM.V(:,FeaturesM)');
-map_21 = knnsearch(GM.V(:,FeaturesM)',GN.V(:,FeaturesN)');
-if ~isfield(GM.Aux,'GPLmkInds')
-    GM.Aux.GPLmkInds = GM.GetGPLmk(NumGPLmks);
-end
-if ~isfield(GN.Aux,'GPLmkInds')
-    GN.Aux.GPLmkInds = GN.GetGPLmk(NumGPLmks);
-end
 %Coarse mapping: Nearest Neighbors
-proc12 = knnsearch(GN.V(:,GN.Aux.GPLmkInds)',GM.V(:,GM.Aux.GPLmkInds)');
-proc21 = knnsearch(GM.V(:,GM.Aux.GPLmkInds)',GN.V(:,GN.Aux.GPLmkInds)');
-GP_M = GM.Aux.GPLmkInds;
-GP_N = GN.Aux.GPLmkInds;
-featureProj1 = knnsearch(GM.V(:,GM.Aux.GPLmkInds)',GM.V(:,FeaturesM)');
-featureProj2 = knnsearch(GN.V(:,GN.Aux.GPLmkInds)',GN.V(:,FeaturesN)');
-lmk12 = proc12(featureProj1);
-lmk21 = proc21(featureProj2);
-while 1 > 0
-    TPS_FEATURESM_INDS = []; TPS_FEATURESN_INDS = [];
-    for j = 1:length(map_12)
-        if map_21(map_12(j)) == j
-            curLmk12 = lmk12(j);
-            curLmk21 = lmk21(map_12(j));
-            [dist12,~,~] = graphshortestpath(GN.A,GP_N(curLmk12),GP_N(featureProj2(map_12(j))));
-            [dist21,~,~] = graphshortestpath(GM.A,GP_M(curLmk21),GP_M(featureProj1(j)));
-            if dist12 < MaxDistTol && dist21 < MaxDistTol
-                TPS_FEATURESM_INDS = [TPS_FEATURESM_INDS FeaturesM(j)];
-                TPS_FEATURESN_INDS = [TPS_FEATURESN_INDS FeaturesN(map_12(j))];
-            end
-        end
-    end
-    if length(TPS_FEATURESM_INDS) < 3
-        disp(['Error: Not enough allowable correspondences. Expanding radius to '...
-            num2str(MaxDistTol+1);]);
-        MaxDistTol = MaxDistTol+1;
-    else
-        break;
-    end
-end
-%%% check for NaN's in the uniformization of GM
-sourceInds = GM.Aux.GPLmkInds(1:NumDensityPnts);
-source = compl(GM.Aux.UniformizationV(:,sourceInds));
-delInds = isnan(source);
-source(delInds) = [];
-sourceInds(delInds) = [];
-VorArea = GM.ComputeVoronoiArea(sourceInds);
-%%% check for NaN's in the uniformization of GN
-targetInds = GN.Aux.GPLmkInds(1:NumDensityPnts);
-target = compl(GN.Aux.UniformizationV(:,targetInds));
-delInds = isnan(target);
-target(delInds) = [];
-targetInds(delInds) = [];
+
+TPS_FEATURESM_INDS = options.GPMatches(:,1)';
+TPS_FEATURESN_INDS = options.GPMatches(:,2)';
 
 
 TextureCoords2 = GN.Aux.UniformizationV(1:2,:);

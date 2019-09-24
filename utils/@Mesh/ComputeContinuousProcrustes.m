@@ -1,4 +1,4 @@
-function [rslt] = ComputeContinuousProcrustesStable_FixedRotation(GM,GN,options)
+function [rslt] = ComputeContinuousProcrustes(GM,GN,options)
 %COMPUTECONTINUOUSPROCRUSTES: Compute cP distance between GM and GN. Output
 %contians
 %   rslt.Gname1:            name of the first mesh
@@ -25,13 +25,11 @@ if nargin<3
     options.MaxDistTol = 8;    %This will be replaced with weighted adjacency in future
     options.NumDensityPnts = 100;
 end
-ProgressBar = getoptions(options,'ProgressBar','off');
 
 %%% feature type for matching
 FeatureType = getoptions(options,'FeatureType','ConfMax');
 NumGPLmks = getoptions(options,'NumDensityPnts',250);
 MaxDistTol = getoptions(options,'MaxDistTol',7);
-NumDensityPnts = getoptions(options,'NumDensityPts',100);
 switch FeatureType
     case 'ADMax'
         FeaturesM = GM.Aux.ADMaxInds;
@@ -52,8 +50,6 @@ if length(FeaturesM) < 3 || length(FeaturesN) < 3
     FeaturesM = GM.GetGPLmk(10);
     FeaturesN = GN.GetGPLmk(10);
 end
-FeaturesMCoords = compl(GM.Aux.UniformizationV(:,FeaturesM));
-FeaturesNCoords = compl(GN.Aux.UniformizationV(:,FeaturesN));
 map_12 = knnsearch(GN.V(:,FeaturesN)',GM.V(:,FeaturesM)');
 map_21 = knnsearch(GM.V(:,FeaturesM)',GN.V(:,FeaturesN)');
 if ~isfield(GM.Aux,'GPLmkInds')
@@ -93,20 +89,6 @@ while 1 > 0
         break;
     end
 end
-%%% check for NaN's in the uniformization of GM
-sourceInds = GM.Aux.GPLmkInds(1:NumDensityPnts);
-source = compl(GM.Aux.UniformizationV(:,sourceInds));
-delInds = isnan(source);
-source(delInds) = [];
-sourceInds(delInds) = [];
-VorArea = GM.ComputeVoronoiArea(sourceInds);
-%%% check for NaN's in the uniformization of GN
-targetInds = GN.Aux.GPLmkInds(1:NumDensityPnts);
-target = compl(GN.Aux.UniformizationV(:,targetInds));
-delInds = isnan(target);
-target(delInds) = [];
-targetInds(delInds) = [];
-
 
 TextureCoords2 = GN.Aux.UniformizationV(1:2,:);
 TextureCoords2(:,isnan(compl(TextureCoords2))) = ones(2,sum(isnan(compl(TextureCoords2))));

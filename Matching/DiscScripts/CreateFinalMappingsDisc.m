@@ -23,9 +23,7 @@ options.GaussMinMatch = 'off';
 TextureCoords1 = cell(length(Names),1);
 TextureCoords2 = cell(length(Names),1);
 maps = cell(length(Names),1);
-dists = zeros(length(Names),length(Names));
 translation = cell(length(Names),1);
-R = cell(length(Names),1);
 
 
 %% Compute registrations
@@ -38,7 +36,6 @@ for i = 1:length(Names)
         continue;
     end
     options.GPMatches = matchesPairs{i};
-    disp('Computing alignment...')
     curMatchedLmks = matchesPairs{i};
     %Gather points
     ptCloud_1 = meshes{i}.V(:,curMatchedLmks(:,1));
@@ -51,7 +48,6 @@ for i = 1:length(Names)
     ptCloud_2 = ptCloud_2/norm(ptCloud_2,'fro');
 
     [U,~,V] = svd(ptCloud_1*(ptCloud_2'));
-    R = V*U';
     for q = 1:meshes{i}.nV
         meshes{i}.V(:,q) = V*U'*meshes{i}.V(:,q);
     end
@@ -70,10 +66,9 @@ for i = 1:length(Names)
         R{i} = rslt_cP.orthogonal;
     end
     options.GPMatches = matchesPairs{i};
-    disp('Computing alignment...')
 
-    rslt_GP = meshes{i}.RecomputeCPMapWithGP(meshes{frechMean},options);
-    rslt_cP = meshes{i}.ComputeContinuousProcrustesStable_FixedRotation(meshes{frechMean},options);
+    rslt_GP = meshes{i}.InterpolateCorrespondences(meshes{frechMean},options);
+    rslt_cP = meshes{i}.ComputeContinuousProcrustes(meshes{frechMean},options);
     
     if rslt_GP.cPdist < rslt_cP.cPdist
         TextureCoords1{i} = rslt_GP.TextureCoords1;
@@ -136,7 +131,7 @@ totalMesh = Mesh('VF',totalPoints',dTri');
 vertFaceRing = CORR_compute_vertex_face_ring(totalMesh.F);
 vertsToDelete = [];
 for i = 1:length(vertFaceRing)
-    if length(vertFaceRing{i}) == 0
+    if isempty(vertFaceRing{i})
         vertsToDelete = [vertsToDelete i];
     end
 end

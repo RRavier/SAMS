@@ -25,7 +25,7 @@ if nargin<3
     options.MaxDistTol = 8;    %This will be replaced with weighted adjacency in future
     options.NumDensityPnts = 100;
 end
-ProgressBar = getoptions(options,'ProgressBar','off');
+ProgressBar = getoptions(options,'ProgressBar','on');
 
 %%% feature type for matching
 FeatureType = getoptions(options,'FeatureType','ConfMax');
