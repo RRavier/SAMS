@@ -2,13 +2,13 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/TeethData/TimeSeriesTeethNoEdgeCases/';
+MetaGroupBasePath = 'D://dummyRun/';
 
 %The list of groups for project
 MetaGroups = {'Default'};
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/TeethData/TimeSeriesTeethNoEdgeCases/Default/';
+workingPath = 'D://dummyRun/Default/';
 
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
@@ -35,8 +35,10 @@ runPermutations = 0;
 %accuracy of p-value
 numSamples = 20000;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DO NOT EDIT BELOW
+StatisticsSetupInternal;
 
 
 %% Global Statistical Analysis Parameters
-TemplateShape = 'MDS'; %SampleMean,WeightedMean,MDS also possible
 Category = 'Default'; %Default = no distinction, or input invidual taxon from taxon file

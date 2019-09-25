@@ -2,7 +2,7 @@ load([workingPath 'GPDists.mat']);
 load([workingPath 'Names.mat']);
 load([workingPath 'MappingData/MatchesPairs_Thresheld.mat']);
 
-rmpath(genpath([SAMSPath 'Matching/external']));
+rmpath(genpath([SAMSPath 'Mapping/external']));
 addpath(genpath([SAMSPath 'utils/']));
 %% Make directories if needed
 orbDataPath = [workingPath 'OrbifoldData/'];

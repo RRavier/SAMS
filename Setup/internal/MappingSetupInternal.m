@@ -4,9 +4,10 @@
 touch([workingPath '\Default\MappingData']);
 rmpath(genpath([SAMSPath 'Alignment']));
 rmpath(genpath([SAMSPath 'Statistics']));
-path(path, genpath([SAMSPath 'Matching/']));
-path(path, genpath([SAMSPath 'utils/'])); 
-rmpath(genpath([SAMSPath 'Matching/external']));  %this is only called for spheres
+path(path, genpath([SAMSPath 'Mapping/']));
+path(path, genpath([SAMSPath 'utils/']));
+path(path, genpath([SAMSPath 'VisualizationScripts']));
+rmpath(genpath([SAMSPath 'Mapping/external']));  %this is only called for spheres
 
 %Sanity check for parameters, fix if needed
 ConfMaxLocalWidth = max(1,ceil(ConfMaxLocalWidth));

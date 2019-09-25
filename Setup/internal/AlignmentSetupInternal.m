@@ -6,7 +6,7 @@
 %Clear path of previously existing directory
 %Path of Aligner
 SAMSPath= [SAMSPath 'Alignment/' AlignerName '/'];
-rmpath([SAMSPath 'utils']); rmpath([SAMSPath 'Matching']);
+rmpath([SAMSPath 'utils']); rmpath([SAMSPath 'Mapping']);
 rmpath([SAMSPath 'Statistics']); rmpath([SAMSPath OrganizationScripts]);
 path(pathdef);
 path(path, genpath([SAMSPath 'software']), genpath([SAMSPath 'code']));

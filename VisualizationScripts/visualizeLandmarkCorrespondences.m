@@ -1,5 +1,10 @@
-load([workingPath 'MappingData/MatchesPairs_Thresheld.mat']);
-
+try
+    load([workingPath 'MappingData/MatchesPairs_Thresheld.mat']);
+catch
+    error('Please compute landmark correspondences before running this method');
+end
+disp('Visualizing all distilled correspondences');
+disp('Press any key to switch pairs of meshes');
 for i = 1:length(Names)
     if i ~= frechMean
         figure

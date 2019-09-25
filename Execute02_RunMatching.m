@@ -3,7 +3,7 @@ MappingSetup;
 load([workingPath 'Flags.mat'])
 ExtractInitialMappings;
 ComputeFeatureMatching;
-Flows = ComputeDirectedFlows(GPDists);      %Will take a while, need to make new method
+Flows = ComputeDirectedFlows(GPDists);
 save([workingPath 'Flows.mat'],'Flows');
 MatchesPairsWrapper;
 
@@ -15,4 +15,5 @@ if Flags('isDisc') == 0
 else
     CreateFinalMappingsDisc;
 end
-
+%Plotting vertex correspondences for reparametrized meshes
+plotColorMap;

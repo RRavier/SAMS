@@ -1,5 +1,5 @@
 rmpath(genpath([SAMSPath '/utils/']));
-addpath(genpath([SAMSPath 'Matching/external/']));
+addpath(genpath([SAMSPath 'Mapping/external/']));
 
 
 
@@ -11,7 +11,6 @@ flatteners = {};
 flag = 0;
 
 DataDir = [workingPath 'OrbifoldData/'];
-%mapList = cell(24,1);
 for i = 1:length(Names)
     if i ~= frechMean
         curDir = [DataDir Names{i} '__To__' Names{frechMean} '/'];
