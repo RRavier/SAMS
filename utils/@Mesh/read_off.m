@@ -26,13 +26,14 @@ end
 V = reshape(A, 3, round(cnt/3));
 
 % read Face 1  1088 480 1022
-F=zeros(20,Nf);
-Fs=zeros(1,Nf);
-for i=1:Nf
-    Fs(i)=fscanf(fid,'%d',1);
-    F(1:Fs(i),i)=fscanf(fid,'%d',Fs(i))'+1;
+[A,cnt] = fscanf(fid,'%d %d %d\n', 3*Nf);
+if cnt~=3*Nf
+    warning('Problem in reading faces.');
 end
-F=F(1:max(Fs),:);
+F = reshape(A,3,round(cnt/3));
+if min(min(F)) < 1
+    F = F+1;
+end
 fclose(fid);
 
 

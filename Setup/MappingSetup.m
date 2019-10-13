@@ -2,19 +2,19 @@
 %% Set input and output paths
 
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-basePath = 'D://Work/ToothAndClaw/ToothAndClawData/TimeSeriesTeeth/aligned_output/';
+basePath = 'D://Work/ToothAndClaw/ToothAndClawData/FeetOutputOFF/aligned/';
 dataPath = [basePath 'aligned/'];
 
 %% Set paths and organization of output
 
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://dummyRun/';
+MetaGroupBasePath = 'D://Dropbox/TeethData/AnkleWristTake2/';
 
 %The list of groups for project
-MetaGroups = {'Default'};
+MetaGroups = {'Talus','Hamate'};
 
 %The path of the current group you are working on
-workingPath = 'D://dummyRun/Default/';
+workingPath = 'D://Dropbox/TeethData/AnkleWristTake2/Talus/';
 
 %Path to previously computed distance matrix; if not specified or does not
 %exist, will compute one at later stage but NOT RECOMMENDED
