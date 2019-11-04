@@ -13,7 +13,8 @@ badBoundaryMeshes = {};
 discBoundaryMeshes = {};
 nonDiscBoundaryMeshes = {};
 numDiscs = 0; numNonDiscs = 0;
-isDisc = 2;
+isMan = 2;
+progressbar
 for i = 1:length(Names)
     load([workingPath '/RawMAT/' Names{i} '.mat']);
     delInds = [];
@@ -23,8 +24,20 @@ for i = 1:length(Names)
         end
     end
     G.DeleteVertex(delInds);
-    isManifoldResult = isManifold(G);
+    save([workingPath 'RawMAT/' Names{i} '.mat'],'G');
     
+    %Verify that there are no degenerate faces
+    badFaceList = [];
+    for q = 1:G.nF
+        if length(G.F(:,q)) ~= length(unique(G.F(:,q)))
+            badFaceList = [badFaceList q];
+        end
+    end
+    G.F(:,badFaceList) = [];
+    G = Mesh('VF',G.V,G.F);
+    save([workingPath 'RawMAT/' Names{i} '.mat'],'G');
+
+    isManifoldResult = isManifold(G);
     %Check if manifold. If not, add to list. If yes, check boundary
     if ~(isManifoldResult.manifold == 1)
         problemMeshes = [problemMeshes Names{i}];
@@ -40,6 +53,7 @@ for i = 1:length(Names)
             badBoundaryMeshes = [badBoundaryMeshes Names{i}];
         end
     end
+    progressbar(i/(length(Names)))
 end
 
 result.problemMeshes = problemMeshes;
@@ -48,12 +62,14 @@ result.discBoundaryMeshes = discBoundaryMeshes;
 result.nonDiscBoundaryMeshes = nonDiscBoundaryMeshes;
 result.numNonDiscs = numNonDiscs;
 result.numDiscs = numDiscs;
+
 if ~isempty(problemMeshes)
     disp('ALERT: Some meshes are not manifolds. Please clean these meshes before proceeding.')
     for i = 1:length(result.problemMeshes)
         disp(result.problemMeshes{i});
     end
     result.isDisc = -1;
+    isMan = -1;
 end
 
 %In future this should be replaced with code that checks homology
@@ -62,9 +78,10 @@ if ~isempty(badBoundaryMeshes)
     disp(['There are ' num2str(numDiscs) ' of those meshes with disc topology and ' ...
         num2str(numNonDiscs) 'with non-disc topology. Please check appropriately.']);
     result.isDisc = -1;
+    isMan = -1;
 end
 
-if ~(isDisc == -1)
+if ~(isMan == -1)
     if numNonDiscs > 0
         result.isDisc = 0;
     else

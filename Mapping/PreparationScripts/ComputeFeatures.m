@@ -31,9 +31,10 @@ end
 
 %% Do complex feature computations and save
 disp('Computing surface features');
-progressbar
-for i = 1:length(Names)
-    progressbar(i/length(Names));
+%progressbar
+parfor i = 1:length(Names)
+    disp(i)
+    %progressbar(i/length(Names));
     [meshList{i},auxList{i}] = meshList{i}.ComputeAuxiliaryInformation(options);
 end
 close all

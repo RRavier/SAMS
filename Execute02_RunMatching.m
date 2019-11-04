@@ -8,7 +8,7 @@ save([workingPath 'Flows.mat'],'Flows');
 MatchesPairsWrapper;
 
 disp('If correspondences are not good, abort and tune parameters via Ctrl+C.')
-pause(60);
+pause(20);
 if Flags('isDisc') == 0
     SetupHypOrb;
     CreateFinalMappingsSphere;

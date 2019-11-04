@@ -22,6 +22,8 @@ options.GaussMinMatch = 'off';
 
 TextureCoords1 = cell(length(Names),1);
 TextureCoords2 = cell(length(Names),1);
+TextureCoordsRev1 = cell(length(Names),1);
+TextureCoordsRev2 = cell(length(Names),1);
 maps = cell(length(Names),1);
 translation = cell(length(Names),1);
 
@@ -91,6 +93,17 @@ for i = 1:length(Names)
         R{i} = rslt_cP.orthogonal;
     end
     
+    options.GPMatches = flip(matchesPairs{i},2);
+
+    rslt_GP = meshes{frechMean}.InterpolateCorrespondences(meshes{i},options);
+    rslt_cP = meshes{frechMean}.ComputeContinuousProcrustes(meshes{i},options);
+    if rslt_GP.cPdist < rslt_cP.cPdist
+        TextureCoordsRev1{i} = rslt_GP.TextureCoords1;
+        TextureCoordsRev2{i} = rslt_GP.TextureCoords2;
+    else
+        TextureCoordsRev1{i} = rslt_cP.TextureCoords1;
+        TextureCoordsRev2{i} = rslt_cP.TextureCoords2;
+    end
 end
 close all
 
@@ -116,14 +129,6 @@ for i = 1:length(Names)
 end
 
 
-totalPoints = [];
-for i = 1:length(Names)
-    if i == frechMean
-        totalPoints = [totalPoints; meshes{i}.Aux.UniformizationV(1:2,:)'];
-    else
-        totalPoints = [totalPoints;TextureCoords1{i}'];
-    end
-end
 totalPoints = meshes{frechMean}.Aux.UniformizationV(1:2,:)';
 %totalPoints = uniquetol(totalPoints,1e-3,'ByRows',true);
 
@@ -216,6 +221,7 @@ save([workingPath 'newMeshList.mat'],'newMeshList');
 
 dists = zeros(length(Names),length(Names));
 
+%% Computing distances and embeddings
 disp('Computing distances and embedding')
 for i = 1:length(Names)
     for j = 1:length(Names)
@@ -225,3 +231,25 @@ end
 [Y,~] = mdscale(dists,3);
 save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
 
+%% Now compute all texture coordinates via composition
+disp('Computng all maps between all surfaces via composition')
+TextureCoords1Matrix = cell(length(Names),length(Names));
+TextureCoords2Matrix = TextureCoords1Matrix;
+
+for i = 1:length(Names)
+    for j =1:length(Names)
+        if i ~= j
+            TextureCoords1List = cell(2,1);
+            TextureCoords2List = cell(2,1);
+            TextureCoords1List{1} = TextureCoords1{i};
+            TextureCoords1List{2} = TextureCoordsRev1{j};
+            TextureCoords2List{1} = TextureCoords2{i};
+            TextureCoords2List{2} = TextureCoordsRev2{j};
+            [TextureCoords1Matrix{i,j},TextureCoords2Matrix{i,j}] ...
+                = ComposeTextures(TextureCoords1List,TextureCoords2List);
+        else
+            TextureCoords1Matrix{i,i} = TextureCoords2{i};
+            TextureCoords2Matrix{i,i} = TextureCoords2{i};
+        end
+    end
+end

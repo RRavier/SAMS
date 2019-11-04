@@ -31,6 +31,7 @@ if isfile(distancePath)
     GPDists = getfield(S,distName{1});
     Flags('hasDists') = 1;
     save([workingPath 'GPDists.mat'],'GPDists');
+    save([workingPath 'Flags.mat'],'Flags');
 else
     Flags('hasDists') = 0;
 end

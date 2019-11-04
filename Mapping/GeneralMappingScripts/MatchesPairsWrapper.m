@@ -15,14 +15,23 @@ if ~isfield(Flags,'RefinementComputed') || ForceRefinement
         disp(i)
         if i ~=frechMean
             numLmks = baseLmks;
+            curNbrSize = nbrSize;
             while true
-
                 [testMatches,~] = ExtractMatchesPairs(pathWtTemp,startPathWt,pathWtDecr,...
-                    i,frechMean,numLmks,nbrSize,percDecr,minPerc,workingPath);
+                    i,frechMean,numLmks,curNbrSize,percDecr,minPerc,workingPath);
                 testMatches = unique(testMatches,'rows');
                 if size(testMatches,1) >= minAlignMatches || numLmks + lmkIter > maxNumLmks
-                    matchesPairs{i} = testMatches;
-                    break;
+                    if size(testMatches,1) == 0
+                        numLmks = baseLmks;
+                        curNbrSize = curNbrSize+1;
+                    elseif curNbrSize > maxNbrSize
+                        error(['Could not detect any correspondences between Frechet mean and \n'...
+                            Names{i} '\n Please verify that maxNbrSize is as desired.\n'...
+                            'Program will terminate as remaining analysis cannot be trusted.']);
+                    else
+                        matchesPairs{i} = testMatches;
+                        break;
+                    end
                 else
                     numLmks = numLmks+lmkIter;
                 end
@@ -54,10 +63,6 @@ load([workingPath 'MappingData/FeatureMatches.mat']);
 frechMesh = meshList{frechMean};
 for i = 1:length(Names)
     if i ~= frechMean
-        if (size(matchesPairs{i},1)+size(featureMatchesPairs{i},1)) <= maxNumMatches
-            matchesPairs{i} = [matchesPairs{i};featureMatchesPairs{i}];
-            continue;
-        end
         curMesh = meshList{i};
         
         [bd_i,~] = meshList{i}.FindOrientedBoundaries;
@@ -74,7 +79,11 @@ for i = 1:length(Names)
         newMatches = featureMatchesPairs{i};
         %newMatches = matchesPairs{i}(1,:);
         
-        for j = size(newMatches,1)+1:maxNumMatches
+        numMatches = size(newMatches,1);
+        while numMatches <= maxNumMatches
+            if isempty(possibleMatches)
+                break;
+            end
             totalDists = zeros(size(possibleMatches,1),1);
             [D_cur,~,~] = meshList{i}.PerformFastMarching(newMatches(:,1));
             [D_frech,~,~] = meshList{frechMean}.PerformFastMarching(newMatches(:,2));
@@ -83,7 +92,12 @@ for i = 1:length(Names)
             end
             [~,nextInd] = max(totalDists);
             nextInd = nextInd(1);
-            newMatches = [newMatches;possibleMatches(nextInd,:)];
+            if min(D_cur(possibleMatches(nextInd,1)),...
+                    D_frech(possibleMatches(nextInd,2))) > minMatchDist ...
+                    || minMatchDist <= 0
+                newMatches = [newMatches;possibleMatches(nextInd,:)];
+                numMatches = numMatches+1;
+            end
             possibleMatches(nextInd,:) = [];
         end
         matchesPairs{i} = newMatches;

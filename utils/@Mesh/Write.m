@@ -1,5 +1,8 @@
-function Write(G,filename,format)
+function Write(G,filename,format,options)
 
+if nargin < 4
+    options.pointCloud = 0;
+end
 
 switch format
     case 'off'
@@ -14,7 +17,11 @@ switch format
         
         % write the points & faces
         fprintf(fid, '%f %f %f\n', G.V);
-        fprintf(fid, '%d %d %d\n', G.F);
+        
+        %ALWAYS ASSUME TRIANGULAR FOR FORMATTING
+        if options.pointCloud == 0
+            fprintf(fid, '3 %d %d %d\n', G.F);
+        end
         
         fclose(fid);
     case 'obj'

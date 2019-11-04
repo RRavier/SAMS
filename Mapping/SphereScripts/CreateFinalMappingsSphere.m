@@ -71,7 +71,7 @@ for i = 1:length(newMeshList)
     newMeshList{i}.V = newMeshList{i}.V-mean(newMeshList{i}.V')';
     newMeshList{i}.V = newMeshList{i}.V/norm(newMeshList{i}.V,'fro');
 end
-save('newMeshList.mat','newMeshList');
+save([workingPath 'newMeshList.mat'],'newMeshList');
 %save('barCoordsList.mat','barCoordsList');
 %save('mapList.mat','mapList');
 dists = zeros(length(Names),length(Names));
@@ -83,5 +83,5 @@ for i = 1:length(Names)
     end
 end
 [Y,~] = mdscale(dists,3);
-save('FinalDists.mat','dists'); save('MDSEmbedding.mat','Y');
+save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
         

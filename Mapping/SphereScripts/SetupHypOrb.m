@@ -6,7 +6,7 @@ rmpath(genpath([SAMSPath 'Mapping/external']));
 addpath(genpath([SAMSPath 'utils/']));
 %% Make directories if needed
 orbDataPath = [workingPath 'OrbifoldData/'];
-
+options.pointCloud = 0;
 touch(orbDataPath);
 meshList = cell(length(Names),1);
 for i = 1:length(Names)

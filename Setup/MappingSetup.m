@@ -2,26 +2,28 @@
 %% Set input and output paths
 
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-basePath = 'D://Work/ToothAndClaw/ToothAndClawData/FeetOutputOFF/aligned/';
-dataPath = [basePath 'aligned/'];
+basePath = 'D:\Work\ToothAndClaw\ToothAndClawData\Talus_Thesis\aligned_output\';
+dataPath = [basePath 'aligned\'];
 
 %% Set paths and organization of output
 
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/TeethData/AnkleWristTake2/';
+MetaGroupBasePath = 'D://Dropbox/SAMSResults/Talus_MEE/';
 
 %The list of groups for project
-MetaGroups = {'Talus','Hamate'};
+MetaGroups = {};
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/TeethData/AnkleWristTake2/Talus/';
+workingPath = 'D://Dropbox/SAMSResults/Talus_MEE/Default/';
 
 %Path to previously computed distance matrix; if not specified or does not
 %exist, will compute one at later stage but NOT RECOMMENDED
 distancePath = [basePath 'GPDMat_high.mat'];
+%distancePath = 'D:\Dropbox\TeethData\Prime_MEE\Default\GPDists.mat';
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
 infoPath = '';
+
 
 %% Feature information. May need to tune.
 
@@ -52,7 +54,7 @@ featureMap = 'Conf';
 
 %Error tolerance for feature matching. Must be nonnegative
 %Smaller = more conservative
-maxDistTol = 0.2;
+maxDistTol = 0.18;
 
 %% Landmark parameters for propagation refinement. May require heavy tuning
 
@@ -83,8 +85,11 @@ startPathWt = .99;
 pathWtDecr = .001;      
 
 %% Accuracy threshold parameters for refinement procedure. TUNE LAST.
-%Defines uncertainty neighborhood of matching. Must be integer.      
+%Defines initial uncertainty neighborhood of matching. Must be integer.      
 nbrSize = 1;
+
+ %Radius at which to not register further. Needed for featureless shapes
+maxNbrSize = 3;    
 %Minimum mass of propagated distribution required to constitute a match.
 %Must be between 0.5 and 1, though should almost never be 1
 minPerc = 0.5;
@@ -95,7 +100,9 @@ percDecr = 0.05;
 
 %% Parameters for final landmarking procedure
 maxNumMatches = 10;     %Maximum number of landmarks used
-                        
+minMatchDist = 0.03;    %Minimum distance needed between any landmarks to establish matching
+                        %Landmarks not added if below this. Set negative if
+                        %no error required.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 MappingSetupInternal;

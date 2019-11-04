@@ -26,14 +26,42 @@ end
 V = reshape(A, 3, round(cnt/3));
 
 % read Face 1  1088 480 1022
-[A,cnt] = fscanf(fid,'%d %d %d\n', 3*Nf);
-if cnt~=3*Nf
+
+%% Temporary fix because files are different
+testLine = fgets(fid);
+testFormat = strsplit(testLine);
+if length(testFormat) == 2
+    testLine = fgets(fid);
+    testFormat = strsplit(testLine);
+end
+
+if length(testFormat) == 4 %3 entries
+elseif length(testFormat) == 5
+else
+    error('Problem with mesh');
+end
+prev = [];
+searchStr = '';
+len = length(testFormat)-1;
+for i = 1:length(testFormat)-1
+    prev = [prev;str2num(testFormat{i})];
+    searchStr = [searchStr '%d'];
+    if i+1 < length(testFormat)
+        searchStr = [searchStr ' '];
+    else
+        searchStr = [searchStr '\n'];
+    end
+end
+[A,cnt] = fscanf(fid,searchStr,len*Nf-len);
+A = [prev;A];
+if cnt~=(len*Nf-len)
     warning('Problem in reading faces.');
 end
-F = reshape(A,3,round(cnt/3));
-if min(min(F)) < 1
-    F = F+1;
+F = reshape(A,len,round((cnt+len)/len));
+if len == 4
+    F = F(2:4,:);
 end
+F = F-min(min(F))+1;
 fclose(fid);
 
 

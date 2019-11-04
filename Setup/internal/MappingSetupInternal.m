@@ -1,7 +1,7 @@
 %% DO NOT EDIT; SETS PATHS AND GUARANTEES PARAMETERS AS REQUIRED
 
 %Set and make relevant paths
-touch([workingPath '\Default\MappingData']);
+touch([workingPath '\MappingData\']);
 rmpath(genpath([SAMSPath 'Alignment']));
 rmpath(genpath([SAMSPath 'Statistics']));
 path(path, genpath([SAMSPath 'Mapping/']));

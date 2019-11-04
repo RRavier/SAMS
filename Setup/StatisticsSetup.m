@@ -2,13 +2,13 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://dummyRun/';
+MetaGroupBasePath = 'D://Dropbox/SAMSResults/Talus_MEE/';
 
 %The list of groups for project
 MetaGroups = {'Default'};
 
 %The path of the current group you are working on
-workingPath = 'D://dummyRun/Default/';
+workingPath = 'D://Dropbox/SAMSResults/Talus_MEE/Default/';
 
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
@@ -18,7 +18,7 @@ infoPath = '';
 %% Local Statistical Analysis Parameters
 
 %Array of p-values to plot significance maps for
-pValues = [0.01];
+pValues = [0.05 0.01 0.005];
 
 %View displacement field between mean samples, set 1 (true) for yes
 viewDisplace = 1;
@@ -30,11 +30,19 @@ viewDisplace = 1;
 %Whether to run permutation tests, should set to 0 (false) unless necessary
 %as computations can be quite large
 runPermutations = 0;
-
+RecomputeLocalStats=0;
 %Number of permutations to run; choose based on desired guidelines for
 %accuracy of p-value
-numSamples = 20000;
+numPerm = 20000;
 
+
+%% For Patch Analysis
+patchFlag = 0;          %Set to nonzero if patch analysis wanted
+radiusType = 'discrete'; %'discrete' or 'continuous'
+radius = 8;
+alignmentMethod = 'AverageMean';      %Future templates to be considered
+embedDim = 3;
+%distanceMeasure = 'Procrustes';     %'Procrustes', 'Normal, 'DNE',
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 StatisticsSetupInternal;

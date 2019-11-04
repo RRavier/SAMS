@@ -62,6 +62,9 @@ end
 
 for v=1:Nv
     %fprintf('v = %d\n',v);
+    if ismember(v,boundary)         %Something is wrong with this method in this case
+        continue;
+    end
     first = 1;
     % find all adjacent faces to v
     adjf = obj.F(:,find(full(F2V(:,v))));
@@ -126,5 +129,3 @@ for b = boundary
         mData.nonManifoldBoundary = [mData.nonManifoldBoundary b];
     end
 end
-
-
