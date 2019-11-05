@@ -32,6 +32,7 @@ BaseInds(NaNInds) = [];
 BC(NaNInds,:) = [];
 ti(NaNInds) = [];
 BCTargets = TR.ConnectivityList(ti,:);
+
 BCPlan = sparse(repmat(BaseInds',3,1),flat(BCTargets),BC(:),nV1,nV2);
 V1onV2 = V2*BCPlan';
 

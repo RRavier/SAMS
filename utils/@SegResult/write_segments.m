@@ -12,18 +12,18 @@ function write_segments(SegResult, dirPath, excludeEmpty, subdirByMesh, colorSeg
 	end
 		
 	for i = 1:length(SegResult.mesh)
-		disp(['Saving segments for mesh ' SegResult.mesh{i}.Aux.name '...']);
+		disp(['Saving segments for mesh ' SegResult.mesh{i}.Aux.Name '...']);
 		for j = 1:length(SegResult.mesh{i}.segment)
 			if (excludeEmpty) && (size(SegResult.mesh{i}.segment{j}.F, 2) == 0) 
 				continue
 			end
 			if colorSegments
-				options.color = SegResult.mesh{i}.segment{j}.c;
+				options.color = SegResult.mesh{i}.segment{j}.Aux.c;
 			else
 				options = struct;
 			end
 			SegResult.mesh{i}.segment{j}.Write(fullfile(d{i}, ...
-				[SegResult.mesh{i}.Aux.name '_seg' num2str(j) '.ply']), ...
+				[SegResult.mesh{i}.Aux.Name '_seg' num2str(j) '.ply']), ...
 				'ply', options);
 			fclose('all');
 		end

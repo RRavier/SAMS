@@ -9,13 +9,9 @@ function plot_segments_3d(SegResult, n, filePath)
 	rng('shuffle');
 	hIdx = randi(length(SegResult.mesh), n, 1);
 
-    if n/4 > 5
-        nCol = ceil(n/4);
-    else
-        nCol = ceil(n/2);
-    end
-        nRow = ceil(n/nCol);
-        
+    
+	nRow = n/2;
+	nCol = ceil(n/nRow);
 
 	for i=1:n
 		m = SegResult.mesh{hIdx(i)};

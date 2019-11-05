@@ -18,7 +18,7 @@ baseWeights = min(baseWeights, baseWeights');
 for i = 1:n
     sDists(i,:) = baseWeights(i, rowNNs(i,:));
 end
-sDists = exp(-sDists.^2/BaseEps);
+sDists = exp(-sDists.^2/baseEps);
 
 %% build augmented diffusion matrix
 load([workingPath 'softMapsMatrix.mat']);
@@ -32,7 +32,7 @@ diffMatrixVal = [];
 cBack = 0;
 disp('Constructing diffusion matrix');
 progressbar
-for j = 1:n
+for j = 53:55%1:n
     for nns = 1:BNN
         if (sDists(j, nns) == 0)
             continue;
@@ -53,9 +53,10 @@ for j = 1:n
         diffMatrixRowIdx = [diffMatrixRowIdx; rowIdx+diffMatrixSizeList(k)];
         diffMatrixColIdx = [diffMatrixColIdx; colIdx+diffMatrixSizeList(j)];
         diffMatrixVal = [diffMatrixVal; sDists(j, nns)*val];
-        progressbar(((i-1)*BNN+nns)/(n*BNN));
+        progressbar(((j-1)*BNN+nns)/(n*BNN));
     end
 end
 
 H = sparse(diffMatrixRowIdx,diffMatrixColIdx,diffMatrixVal,diffMatrixSize,diffMatrixSize);
 
+save([workingPath 'DiffusionMatrix.mat'],'H');

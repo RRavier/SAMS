@@ -14,10 +14,10 @@ function export(SegResult, cfg)
 	SegResult.write_meshes(fullfile(outPath, 'mesh'));
 	fclose('all');
 	SegResult.write_segments(fullfile(outPath, 'segment'), ...
-		1, SegResult.cfg.msc.dirCollate, SegResult.cfg.param.colorSegments);
+		1, cfg.dirCollate, cfg.colorSegments);
 	fclose('all');
 	SegResult.write_seg_all(fullfile(outPath, 'seg_all.off'), ...
-		SegResult.cfg.param.colorSegments);
+		cfg.colorSegments);
 	fclose('all');
 
 	%%% Write CSV tables
@@ -27,7 +27,7 @@ function export(SegResult, cfg)
 
 	%%% Plot and save figures
 	SegResult.plot_freq_dist(fullfile(outPath, 'freq_dist.eps'));
-	SegResult.plot_segments_3d(SegResult.cfg.msc.nMeshDisplay, ...
+	SegResult.plot_segments_3d(cfg.numMeshDisplay, ...
 		fullfile(outPath, 'segment.fig'));
 
 	%%% Save result object

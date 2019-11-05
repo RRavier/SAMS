@@ -8,13 +8,13 @@ dataPath = [basePath 'aligned\'];
 %% Set paths and organization of output
 
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/SAMSResults/Talus_MEE/';
+MetaGroupBasePath = 'D://Dropbox/SAMSResults/Prime_MEE/';
 
 %The list of groups for project
 MetaGroups = {};
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/SAMSResults/Talus_MEE/Default/';
+workingPath = 'D://Dropbox/SAMSResults/Prime_MEE/Default/';
 
 %Path to previously computed distance matrix; if not specified or does not
 %exist, will compute one at later stage but NOT RECOMMENDED

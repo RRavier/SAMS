@@ -29,7 +29,7 @@ function write_seg_all(SegResult, filePath, colorSegments)
 			movedV = newMesh{i}.segment{j}.V + segLoc;
 			groupF = [groupF newMesh{i}.segment{j}.F+length(groupV)];
 			groupV = [groupV movedV];
-			groupC = [groupC newMesh{i}.segment{j}.c];
+			groupC = [groupC newMesh{i}.segment{j}.Aux.c];
 		end
 	end
 
@@ -38,7 +38,8 @@ function write_seg_all(SegResult, filePath, colorSegments)
 		options.color = groupC;
 	else
 		options = struct;
-	end
+    end
+    options.pointCloud=0;
 	meshGroup.Write(fullfile(filePath), 'off', options);
 
 end

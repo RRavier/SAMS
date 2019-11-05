@@ -7,22 +7,25 @@ for i = 1:length(Names)
 end
 
 load([workingPath 'TextureCoordsSource.mat']);
-load([workingPath 'TextureCoordsTarget.mat']
+load([workingPath 'TextureCoordsTarget.mat']);
 
 %% Create full soft maps matrix
 softMapsMatrix = cell(length(meshList),length(meshList));
 progressbar
+disp('Creating soft maps matrix');
+AugKernel12 = cell(length(meshList),1);
+AugKernel21 = AugKernel12;
 for i = 1:length(meshList)
     G1 = meshList{i};
-    for j = 1:length(meshList)  
-        G2 = meshList{j};
-        [~,~,AugKernel12,~] = MapSoftenKernel(TextureCoordsSource{i}...
-            ,TextureCoordsTarget{j},G2.F,G1.V,G2.V,fiberEps);
-        [~,~,AugKernel21,~] = MapSoftenKernel(TextureCoordsFinal{j}...
-            ,TextureCoordsSource{i},G1.F,G2.V,G1.V,fiberEps);
-        softMapsMatrix{i,j} = max(AugKernel12,AugKernel21');
-        progressbar(((i-1)*length(meshList)+j)/(length(meshList)^2));
+    parfor j = 1:length(meshList)  
+        [~,~,AugKernel12{j},~] = MapSoftenKernel(TextureCoordsSource{i,j}...
+            ,TextureCoordsTarget{i,j},meshList{j}.F,G1.V,meshList{j}.V,fiberEps);
+        [~,~,AugKernel21{j},~] = MapSoftenKernel(TextureCoordsTarget{i,j}...
+            ,TextureCoordsSource{i,j},G1.F,meshList{j}.V,G1.V,fiberEps);
+        softMapsMatrix{i,j} = max(AugKernel12{j},AugKernel21{j}');
+        
     end
+    progressbar(i/length(meshList));
 end
 save([workingPath 'softMapsMatrix.mat'],'softMapsMatrix');
 

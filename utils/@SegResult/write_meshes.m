@@ -4,9 +4,9 @@ function write_meshes(SegResult, dirPath)
 	touch(dirPath);
 
 	for i = 1:length(SegResult.mesh)
-		disp(['Saving mesh ' SegResult.mesh{i}.Aux.name ' as OFF file...']);
+		disp(['Saving mesh ' SegResult.mesh{i}.Aux.Name ' as OFF file...']);
 		SegResult.mesh{i}.Write(fullfile(dirPath, ...
-			[SegResult.mesh{i}.Aux.name '.ply']), 'ply', struct);
+			[SegResult.mesh{i}.Aux.Name '.ply']), 'ply', struct);
 		fclose('all');
 	end
 	

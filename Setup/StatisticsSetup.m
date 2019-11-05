@@ -2,13 +2,13 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/SAMSResults/Talus_MEE/';
+MetaGroupBasePath = 'D://Dropbox/SAMSResults/Prime_MEE/';
 
 %The list of groups for project
 MetaGroups = {'Default'};
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/SAMSResults/Talus_MEE/Default/';
+workingPath = 'D://Dropbox/SAMSResults/Prime_MEE/Default/';
 
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
@@ -53,8 +53,9 @@ numSegments = 10;
 kMeansMaxIter = 5000;
 
 %% Hecate Output Formatting
-colorSegments = 1;
+numMeshDisplay = 1;
 dirCollate = 0;
+meshDisplayNumber = 10;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 StatisticsSetupInternal;

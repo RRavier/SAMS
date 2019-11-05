@@ -2,19 +2,20 @@ initialize;
 StatisticsSetup;
 % CLUSTER_CSC - Carry out consistent spectral clustering analysis on cluster
 
-touch([workingDir 'Hecate/']);
-hecateDir = [workingDir 'Hecate/'];
+touch([workingPath 'Hecate/']);
+hecateDir = [workingPath 'Hecate/'];
 CreateSoftMaps;
 GetVertexOrganization;
-BuildDiffusionMatrix
+BuildDiffusionMatrix;
 EigenDecomp;
 SpectralClustering;
 
 cfg.dirCollate = dirCollate;
 cfg.colorSegments = colorSegments;
 cfg.out = hecateDir;
-segRes = SegResult(meshList, kIdx, vIdxCumSum, cfg);
+cfg.numMeshDisplay = numMeshDisplay;
+segRes = SegResult(meshList, kIdx, vIdxCumSum);
 segRes.calc_data();
-segRes.export(cfg.param.alignTeeth);
+segRes.export(cfg);
 
 

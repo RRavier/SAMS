@@ -11,7 +11,7 @@ function calc_data(SegResult)
 	data.segmentNonZeroN  = zeros(data.meshN, 1);
 	data.segmentAreaTotal = zeros(data.meshN, 1);
 	data.segmentArea      = cell(data.meshN, 1);
-	data.meshName		  = cellfun(@(x) x.Aux.name, ...
+	data.meshName		  = cellfun(@(x) x.Aux.Name, ...
 		SegResult.mesh, 'UniformOutput', 0)';
 
 	for i = 1:data.meshN		

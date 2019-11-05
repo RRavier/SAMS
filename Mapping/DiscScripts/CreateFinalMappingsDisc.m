@@ -64,6 +64,10 @@ progressbar
 for i = 1:length(Names)
     progressbar(i/length(Names));
     if i == frechMean
+        TextureCoords1{i} = meshes{i}.Aux.UniformizationV(1:2,:);
+        TextureCoords2{i} = TextureCoords1{i};
+        TextureCoordsRev1{i} = TextureCoords1{i};
+        TextureCoordsRev2{i} = TextureCoords1{i};
         continue;
     end
     if isempty(matchesPairs{i})
@@ -236,22 +240,20 @@ disp('Computng all maps between all surfaces via composition')
 TextureCoordsSource = cell(length(Names),length(Names));
 TextureCoordsTarget = TextureCoordsSource;
 
+progressbar
+
 for i = 1:length(Names)
-    for j =1:length(Names)
+    TextureCoordsSource{i,i} = TextureCoords1{i};
+    TextureCoordsTarget{i,i} = TextureCoords1{i};
+    parfor j =1:length(Names)
         if i ~= j
-            TextureCoords1List = cell(2,1);
-            TextureCoords2List = cell(2,1);
-            TextureCoords1List{1} = TextureCoords1{i};
-            TextureCoords1List{2} = TextureCoordsRev1{j};
-            TextureCoords2List{1} = TextureCoords2{i};
-            TextureCoords2List{2} = TextureCoordsRev2{j};
             [TextureCoordsSource{i,j},TextureCoordsTarget{i,j}] ...
-                = ComposeTextures(TextureCoords1List,TextureCoords2List);
-        else
-            TextureCoordsSource{i,i} = TextureCoords2{i};
-            TextureCoordsTarget{i,i} = TextureCoords2{i};
+                = ComposeTextures([TextureCoords1(i) TextureCoordsRev1(j)]...
+                ,[TextureCoords2(i) TextureCoordsRev2(j)]);
         end
+        %progressbar(((i-1)*length(Names)+j)/(length(Names)^2));
     end
+    progressbar(i/length(Names));
 end
 save([workingPath 'TextureCoordsSource.mat'],'TextureCoordsSource');
 save([workingPath 'TextureCoordsTarget.mat'],'TextureCoordsTarget');
