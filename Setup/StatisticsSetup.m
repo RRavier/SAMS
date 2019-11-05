@@ -43,6 +43,18 @@ radius = 8;
 alignmentMethod = 'AverageMean';      %Future templates to be considered
 embedDim = 3;
 %distanceMeasure = 'Procrustes';     %'Procrustes', 'Normal, 'DNE',
+
+%% Hecate settings
+baseEps = 0.03;
+fiberEps = 1e-3;
+BNN = 5;
+numEigs = 15;
+numSegments = 10;
+kMeansMaxIter = 5000;
+
+%% Hecate Output Formatting
+colorSegments = 1;
+dirCollate = 0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 StatisticsSetupInternal;

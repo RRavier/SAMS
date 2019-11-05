@@ -233,8 +233,8 @@ save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.ma
 
 %% Now compute all texture coordinates via composition
 disp('Computng all maps between all surfaces via composition')
-TextureCoords1Matrix = cell(length(Names),length(Names));
-TextureCoords2Matrix = TextureCoords1Matrix;
+TextureCoordsSource = cell(length(Names),length(Names));
+TextureCoordsTarget = TextureCoordsSource;
 
 for i = 1:length(Names)
     for j =1:length(Names)
@@ -245,11 +245,13 @@ for i = 1:length(Names)
             TextureCoords1List{2} = TextureCoordsRev1{j};
             TextureCoords2List{1} = TextureCoords2{i};
             TextureCoords2List{2} = TextureCoordsRev2{j};
-            [TextureCoords1Matrix{i,j},TextureCoords2Matrix{i,j}] ...
+            [TextureCoordsSource{i,j},TextureCoordsTarget{i,j}] ...
                 = ComposeTextures(TextureCoords1List,TextureCoords2List);
         else
-            TextureCoords1Matrix{i,i} = TextureCoords2{i};
-            TextureCoords2Matrix{i,i} = TextureCoords2{i};
+            TextureCoordsSource{i,i} = TextureCoords2{i};
+            TextureCoordsTarget{i,i} = TextureCoords2{i};
         end
     end
 end
+save([workingPath 'TextureCoordsSource.mat'],'TextureCoordsSource');
+save([workingPath 'TextureCoordsTarget.mat'],'TextureCoordsTarget');
