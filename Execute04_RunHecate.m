@@ -1,10 +1,19 @@
 initialize;
 StatisticsSetup;
 % CLUSTER_CSC - Carry out consistent spectral clustering analysis on cluster
-
+load([workingPath 'Flags.mat']);
 touch([workingPath 'Hecate/']);
 hecateDir = [workingPath 'Hecate/'];
-CreateSoftMaps;
+
+if Flags('isDisc') == 0
+    CreateSoftMapsSphere;
+    meshList = newMeshList;
+    for i = 1:length(Names)
+        meshList{i}.Aux.Name = Names{i};
+    end
+else
+    CreateSoftMaps;
+end
 GetVertexOrganization;
 BuildDiffusionMatrix;
 EigenDecomp;

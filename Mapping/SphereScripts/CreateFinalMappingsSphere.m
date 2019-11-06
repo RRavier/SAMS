@@ -43,11 +43,15 @@ for i = 1:length(Names)
     end
 end
 barCoordsList = cell(length(Names),1);
+barCoordsListRev = cell(length(Names),1);
 for i = 1:length(Names)
     if i ~=frechMean
         barCoordsList{i} = mapList{i}.barCoords{2,1};
+        barCoordsListRev{i} = mapList{i}.barCoords{1,2};
     end
 end
+save([workingPath 'barCoordsList.mat','barCoordsList']);
+save([workingPath 'barCoordsListRev.mat','barCoordsListRev']);
 addpath(genpath([SAMSPath '/utils/']));
 rmpath(genpath([SAMSPath 'Matching/external/']));
 meshList = cell(length(Names),1);

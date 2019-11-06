@@ -32,7 +32,7 @@ diffMatrixVal = [];
 cBack = 0;
 disp('Constructing diffusion matrix');
 progressbar
-for j = 53:55%1:n
+for j = 1:n
     for nns = 1:BNN
         if (sDists(j, nns) == 0)
             continue;

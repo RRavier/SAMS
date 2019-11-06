@@ -26,7 +26,7 @@ switch format
                 fc = vertcat(G.F - 1, options.color);
                 fprintf(fid, ['3 %d %d %d %f %f %f %f\n'], fc);
             else
-                fprintf(fid, ['3 %d %d %d\n'], G.F - 1);
+                fprintf(fid, ['3 %d %d %d\n'], G.F);
             end
         end
         
