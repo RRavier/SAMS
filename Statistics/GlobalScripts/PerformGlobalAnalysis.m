@@ -35,6 +35,7 @@ for k = 1:length(keys)
 end
 touch([interStatPath 'Total/']);
 
+%% Now do analysis
 disp('Performing global analysis on MDS');
 MDSGlobalAnalysis;
 WeightedMeanMDSGlobalAnalysis;

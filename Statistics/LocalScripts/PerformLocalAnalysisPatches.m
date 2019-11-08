@@ -283,7 +283,7 @@ for s = 1:length(SpecimenTypes)
                                 curFPC = FPC{c};
                                 switch curFPC
                                     case 'FWER'
-                                        maxP = sortP(max(find(sortP<(pValues(p)*(1:length(sortP))'/length(sortP)))));
+                                        maxP = sortP(max(find(sortP<(pValues(p)*(1:length(sortP))/length(sortP)))));
                                     case 'Bonferroni'
                                         maxP = sortP(max(find(sortP<(pValues(p)/g1Mean.nV))));
                                     case 'None'
@@ -390,7 +390,7 @@ for s = 1:length(SpecimenTypes)
                                 curFPC = FPC{c};
                                 switch curFPC
                                     case 'FWER'
-                                        maxP = sortP(max(find(sortP<(pValues(p)*(1:length(sortP))'/length(sortP)))));
+                                        maxP = sortP(max(find(sortP<(pValues(p)*(1:length(sortP))/length(sortP)))));
                                     case 'Bonferroni'
                                         maxP = sortP(max(find(sortP<(pValues(p)/g1Mean.nV))));
                                     case 'None'
@@ -451,10 +451,9 @@ for s = 1:length(SpecimenTypes)
                                     'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
                                 %Quick Conversion To Scientific Notation
                                 setappdata(gcf, 'StoreTheLink', Link);
-                                figPath = [curPath 'HeatMaps/Patch/' alignmentMethod '/' keys{g} '/' ...
-                                    TTestType{t} '/' FPC{c} '/' ...
-                                    num2str(pValues(p)*10^(exponents(p))) ...
-                                    'e-' num2str(exponents(p)) '/'];
+                                 figPath = [curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/'...
+                                     FPC{c} '/' num2str(pValues(p)*10^(exponents(p)))...
+                                     'e-' num2str(exponents(p)) '/'];
                                 touch(figPath);
                                 saveas(gcf,[figPath unLabels{i} '_' unLabels{j}]);  
                                 close all
