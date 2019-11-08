@@ -1,10 +1,6 @@
-function touch(dir_string)
-%TOUCH Summary of this function goes here
-%   Detailed explanation goes here
-
-if ~exist(dir_string, 'dir')
-    mkdir(dir_string);
+%Makes working directory activated
+function touch(workingDir)
+    if ~isdir(workingDir)
+        mkdir(workingDir);
+    end
 end
-
-end
-
