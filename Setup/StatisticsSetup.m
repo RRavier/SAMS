@@ -39,7 +39,7 @@ numPerm = 20000;
 %% For Patch Analysis
 patchFlag = 0;          %Set to nonzero if patch analysis wanted
 radiusType = 'discrete'; %'discrete' or 'continuous'
-radius = 8;
+radius = 5;
 alignmentMethod = 'AverageMean';      %Future templates to be considered
 embedDim = 3;
 %distanceMeasure = 'Procrustes';     %'Procrustes', 'Normal, 'DNE',
