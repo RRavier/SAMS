@@ -1,3 +1,4 @@
+%% Load necessary variables
 load([workingPath 'GPDists.mat']);
 load([workingPath 'Flags.mat']);
 load([workingPath 'Names.mat']);
@@ -9,6 +10,7 @@ end
 frechMean = find(sum(GPDists.^2)==min(sum(GPDists.^2)));
 matchesPairs = cell(length(Names),1);
 
+%% Run Matches Pairs Procedure
 if ~isfield(Flags,'RefinementComputed') || ForceRefinement
     disp('Computing Pairwise Matchings for Mesh:');
     for i = 1:length(Names)
@@ -56,11 +58,14 @@ if ~isfield(Flags,'RefinementComputed') || ForceRefinement
     save([workingPath 'Flags.mat'],'Flags');
 end
 %above save step done in case of errors
+
+%% Threshold matches
 load([workingPath '/MappingData/matchesPairs.mat']);
 load([workingPath 'MappingData/FeatureMatches.mat']);
 
 
 frechMesh = meshList{frechMean};
+progressbar
 for i = 1:length(Names)
     if i ~= frechMean
         curMesh = meshList{i};
@@ -102,5 +107,6 @@ for i = 1:length(Names)
         end
         matchesPairs{i} = newMatches;
     end
+    progressbar(i/length(Names));
 end
 save([workingPath '/MappingData/MatchesPairs_Thresheld.mat'],'matchesPairs');

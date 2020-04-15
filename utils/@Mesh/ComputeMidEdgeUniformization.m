@@ -16,8 +16,9 @@ vertArea = G.Aux.VertArea;
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 % 1) decide where to cut the surface (for flattening/uniformization)
 disp('Find a face to cut the surface for uniformization...');
-[v_max_V] = CORR_spread_points_euclidean(G.V',[],200);
-GeoField = pdist2(G.V(:,v_max_V)',G.V');
+v_max_V = CORR_spread_points_euclidean(G.V',[],200);
+
+GeoField = pdist2(real(G.V(:,v_max_V)'),real(G.V'));
 
 medianGeoField = mean(GeoField,2);
 [~, minplc] = min(medianGeoField);

@@ -88,4 +88,6 @@ for i = 1:length(Names)
 end
 [Y,~] = mdscale(dists,3);
 save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
+
+disp('Finished mapping surfaces');
         

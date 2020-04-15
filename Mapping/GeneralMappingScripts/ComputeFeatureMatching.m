@@ -62,4 +62,6 @@ for i = 1:length(Names)
         end
     end
 end
+Flags('featureMappings') = 1;
+save([workingPath 'Flags.mat'],'Flags');
 save([workingPath 'MappingData/FeatureMatches.mat'],'featureMatchesPairs');

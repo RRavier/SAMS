@@ -70,10 +70,10 @@ points = double(points);
 viewPoint = double(viewPoint);
 
 %create kdtree
-kdtreeobj = KDTreeSearcher(points,'distance','euclidean');
+kdtreeobj = KDTreeSearcher(real(points),'distance','euclidean');
 
 %get nearest neighbours
-n = knnsearch(kdtreeobj,points,'k',(numNeighbours+1));
+n = knnsearch(kdtreeobj,real(points),'k',(numNeighbours+1));
 
 %remove self
 n = n(:,2:end);

@@ -46,6 +46,12 @@ methods
             switch(varargin{1})
                 case 'ply'
                     [obj.V,obj.F] = obj.read_ply(varargin{2});
+                    if size(obj.V,1) == 3
+                        obj.V = obj.V';
+                    end
+                    if size(obj.F,1) == 3
+                        obj.F = obj.F';
+                    end
                 case 'off'
                     [obj.V,obj.F] = obj.read_off(varargin{2});
                 case 'obj'

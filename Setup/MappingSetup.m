@@ -2,113 +2,74 @@
 %% Set input and output paths
 
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-basePath = 'D:\Work\ToothAndClaw\ToothAndClawData\Talus_Thesis\aligned_output\';
-dataPath = [basePath 'aligned\'];
-
-%% Set paths and organization of output
+basePath = 'D:\Dropbox\SAMSResults\Prime_MEE\Default\RawOFF\';
+distancePath = 'D:\Dropbox\SAMSResults\Prime_MEE\Default\GPDists.mat';
 
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/SAMSResults/Talus_MEE/';
-
-%The list of groups for project
-MetaGroups = {};
+projectDir = 'D://Dropbox/SAMSResults/Dissertation_Teeth/';
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/SAMSResults/Talus_MEE/Default/';
-
-%Path to previously computed distance matrix; if not specified or does not
-%exist, will compute one at later stage but NOT RECOMMENDED
-distancePath = [basePath 'GPDMat_high.mat'];
-%distancePath = 'D:\Dropbox\TeethData\Prime_MEE\Default\GPDists.mat';
-%Path of Excel file containing taxa information. Leave empty if none. 
-%PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
-infoPath = '';
-
+specimenGroup = 'Default';
 
 %% Feature information. May need to tune.
 
 %Force recomputation of features, default to 0 (false)
-ForceFeatureRecomputation = 0;
+ForceFeatureRecomputation = 1;
+%Number of Gaussian Process landmarks to draw; these are candidate
+%pseudolandmarks. Choose based on collection, about 4-5 percent of number
+%of vertices sufficient
+numGPLmks = 200;    
 
-%Amount of smoothing to apply to curvatures. Lower priority for tuning
-SmoothCurvatureFields = 3;          
+%% Pseudolandmark matching parameters. Set and test based on visual output.
 
-%Size of neighborhood required to declare local extrema of curvatures
-%All neighborhoods set on discrete distance and may need to be tuned
-%MUST BE INTEGER VALUED
-ConfMaxLocalWidth = 8;              %Conformal factor maxima
-GaussMaxLocalWidth = 10;            %Gauss curvature maxima
-MeanMinLocalWidth = 8;              %Absolute mean curvature minima
-DNEMaxLocalWidth = 8;               %DNE v1 maxima
+%Geometric features used to extract initial matches.
+%Options are Conf = conformal factor, Gauss = Gaussian curvature, 
+%Mean = absolute mean curvature, DNE = DNE.
+%Gauss recommended to start
+featureMap = 'Gauss';
 
-%Number of subsamples to draw on each mesh for different subsampling types
-%MUST BE POSITIVE INTEGER, should be 1-2 percent of number of mesh vertices
-NumDensityPts = 100;                %FPS (Farthest-point sampling)
-numGPLmks = 200;                    %Gaussian Process (GP)
-
-%% Initial feature mapping parameters. Set and test based on visual output.
-
-%Feature to use for mapping. Options are Conf = conformal factor,
-%Gauss = Gaussian curvature, Mean = absolute mean curvature, DNE = DNE v2
-featureMap = 'Conf';
-
-%Error tolerance for feature matching. Must be nonnegative
-%Smaller = more conservative
-maxDistTol = 0.18;
-
-%% Landmark parameters for propagation refinement. May require heavy tuning
-
-%Force refinement even if already computed. Default to 0 (false)
-ForceRefinement = 0;
-%Initial number of GP landmarks used. Use more for more complex surfaces
-baseLmks = 50;
-
-%How many landmarks to add per iteration of refinement process
-lmkIter = 40;
-
-%Maximum number of GP landmarks to use. Do not make this above numGPLmks
-maxNumLmks = 200;
-
-%Minimum number of matches required to break refinment procedure
-minAlignMatches = 15;   
-
-%% Distribution parameters for propagation refinement. MAY REQUIRE HEAVY TUNING
-
-%Nonnegative parameter governing uniformity of distribution of initial maps 
-%Higher values = more uniformity
-pathWtTemp = 1;
-
-%Starting minimum path weight for acceptance, should not be greater than 1
-startPathWt = .99;   
-
-%Decrement of path weight if no valid paths at least startPathWt found.
-pathWtDecr = .001;      
-
-%% Accuracy threshold parameters for refinement procedure. TUNE LAST.
-%Defines initial uncertainty neighborhood of matching. Must be integer.      
-nbrSize = 1;
-
- %Radius at which to not register further. Needed for featureless shapes
-maxNbrSize = 3;    
-%Minimum mass of propagated distribution required to constitute a match.
-%Must be between 0.5 and 1, though should almost never be 1
-minPerc = 0.5;
-%Parameter governing how gradual landmark matching goes
-%Must be positive, smaller = more gradual
-percDecr = 0.05;        
+ForcePutativeMatching = 0;    %Force recomputation of putative matches
+maxDepth = 3;           %Maximum number of links in path, keep between 3-5
+maxNbrSize = 3;         %Amount of uncertainty tolerated in pseudolandmark matching
+                        %Should be an integer at least 1
 
 
 %% Parameters for final landmarking procedure
-maxNumMatches = 10;     %Maximum number of landmarks used
-minMatchDist = 0.03;    %Minimum distance needed between any landmarks to establish matching
+maxNumMatches = 10;     %Maximum number of landmarks matches used
+                        %Set based on intuition for number of Type II/III
+                        %landmarks usually required for analysis
+minMatchDist = 0.1;     %Minimum distance needed between any landmarks to establish matching
                         %Landmarks not added if below this. Set negative if
                         %no error required.
-                        
+
+%% Visualization Parameters
+visNumRow = 8;          %When visualizing landmark correspondences,
+                        %the number of surfaces to view at once.
 %% Parameters for spherical Hecate only
 numGPLmksHecate = 200;
 featureMapHecate = 'Gauss';
 numLmksHecate = 15;
 hecateFeatureInds = 10;
+
+%% The following parameters are less likely to need to change
+
+%Feature computation parameters, MUST BE INTEGER VALUED
+%Amount of smoothing to apply to curvatures. Lower priority for tuning
+SmoothCurvatureFields = 3;          %Amount of smoothing applied to curvatures          
+ConfMaxLocalWidth = 8;              %Conformal factor maxima radius
+GaussMaxLocalWidth = 10;            %Gauss curvature maxima radius
+MeanMinLocalWidth = 8;              %Absolute mean curvature minima radius
+DNEMaxLocalWidth = 8;               %DNE v1 maxima radius
+
+%Putative Matching Parameters
+minPerc = 0.5;          %Minimum relative likelihood needed to establish match.
+                        %Set between 0.5 and 1
+percDecr = 0.05;        %Decrement parameter for lowering required relative likelihood
+                        %Should be positive, at most minPerc. Smalelr = more
+                        %gradual decrement
+pathWtDecr = .995;      %Decrement minimum weight of path considered
+                        %Set between 0 and 1, numbers closer to one result
+                        %in slower, higher precision computation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 MappingSetupInternal;

@@ -27,7 +27,10 @@ function [H] = ariaDNE(G, bandwidth, Options)
 %       June 14, 2018
 
 % default options
-H.Opts.distInfo = 'Geodeisic';
+edgeLengths = triu(pdist2(G.V',G.V').*G.A);
+edgeLengths = edgeLengths(find(edgeLengths>0));
+bandwidth = 1.5*median(edgeLengths);
+H.Opts.distInfo = 'Geodesic';
 H.Opts.distance = [];
 H.Opts.bandwidth = bandwidth;
 H.Opts.cutThresh = 0;
@@ -61,9 +64,9 @@ end
 
 % mesh cleaning: remove unreferenced vertices, zero-area faces, and
 % isolated vertices.
-G.remove_unref_verts;
-G.remove_zero_area_faces;
-G.DeleteIsolatedVertex;
+%G.remove_unref_verts;
+%G.remove_zero_area_faces;
+%G.DeleteIsolatedVertex;
 
 % mesh preparation: centeralize, normalize the mesh to have surface area 1,
 % compute an initial estimate of normals 
@@ -76,14 +79,14 @@ if size(vnorm,1) < size(vnorm,2)
 end
 
 points = G.V';
-numPoints = G.nV; 
+numPoints = size(G.V,2); 
 normals = zeros(numPoints,3);
 curvature = zeros(numPoints,1);
 curvature_nn = zeros(numPoints,1);
 
 % compute or load pairwise distnace
 if isempty(H.Opts.distance) 
-    if strcmpi(H.Opts.distInfo, 'Geodeisic') 
+    if strcmpi(H.Opts.distInfo, 'Geodesic') 
         d_dist = graphallshortestpaths(Triangulation2AdjacencyWeighted(G));
     elseif strcmpi(H.Opts.distInfo, 'Euclidean')
         d_dist = squareform(pdist(points));
@@ -98,8 +101,14 @@ end
 K = exp(-d_dist.^2/(bandwidth^2));
 
 % for each vertex in the mesh, estimate its curvature via PCA
+
 for jj = 1:numPoints
-    neighbour = find(K(jj,:) > H.Opts.cutThresh);
+    try
+        neighbour = find(K(jj,:) > H.Opts.cutThresh);
+    catch
+        find(K(jj,:)>H.Opts.curThresh)
+        error()
+    end
     numNeighbours = length(neighbour);
     if numNeighbours <= 3
      fprintf('ARIADNE.m: Too few neighbor on vertex %d. \n', jj);

@@ -32,6 +32,7 @@
            end
        end
    end
+   F = F-min(min(F))+1;
    fclose( fp );
    Fs = [];
 end

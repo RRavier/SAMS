@@ -4,7 +4,7 @@ rawOFFPath = [workingPath '/RawOFF/'];
 rawMATPath = [workingPath '/RawMAT/'];
 touch(rawOFFPath);
 touch(rawMATPath);
-Names = {};
+Names = {}; options.pointCloud = 0;
 progressbar
 for i = 3:length(dataDir)
     if strcmp(dataDir(i).name(end-2:end),'off') ...
@@ -19,7 +19,7 @@ for i = 3:length(dataDir)
             case 'ply'
                 G = Mesh('ply',[dataPath dataDir(i).name]);
         end
-        G.Write([rawOFFPath dataDir(i).name(1:end-4) '.off'],'off');
+        G.Write([rawOFFPath dataDir(i).name(1:end-4) '.off'],'off',options);
         save([rawMATPath dataDir(i).name(1:end-4) '.mat'],'G');
     end
     progressbar((i-2)/(length(dataDir)-2))
@@ -35,4 +35,5 @@ if isfile(distancePath)
 else
     Flags('hasDists') = 0;
 end
+save([workingPath 'Flags.mat'],'Flags');
 

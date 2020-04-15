@@ -16,7 +16,7 @@ numDiscs = 0; numNonDiscs = 0;
 isMan = 2;
 progressbar
 for i = 1:length(Names)
-    load([workingPath '/RawMAT/' Names{i} '.mat']);
+    G = Mesh('off',[workingPath 'RawOFF/' Names{i} '.off']);
     delInds = [];
     for q = 1:G.nV
         if length(find(G.F==q)) == 0
@@ -37,7 +37,11 @@ for i = 1:length(Names)
     G = Mesh('VF',G.V,G.F);
     save([workingPath 'RawMAT/' Names{i} '.mat'],'G');
 
-    isManifoldResult = isManifold(G);
+    try
+        isManifoldResult = isManifold(G);
+    catch
+        isManifoldResult.manifold = 0;
+    end
     %Check if manifold. If not, add to list. If yes, check boundary
     if ~(isManifoldResult.manifold == 1)
         problemMeshes = [problemMeshes Names{i}];
@@ -76,7 +80,8 @@ end
 if ~isempty(badBoundaryMeshes)
     disp('ALERT: The manifold meshes do not have consistent topology. Please resolve before proceeding.');
     disp(['There are ' num2str(numDiscs) ' of those meshes with disc topology and ' ...
-        num2str(numNonDiscs) 'with non-disc topology. Please check appropriately.']);
+        num2str(numNonDiscs) ' with non-disc topology.\n There are ' num2str(length(badBoundaryMeshes)) ...
+        ' meshes with boundary problems. Please check appropriately.']);
     result.isDisc = -1;
     isMan = -1;
 end

@@ -40,6 +40,7 @@ if cnt~=4*nface
 end
 A = reshape(A, 4, cnt/4);
 face = A(2:4,:);
+face = face-min(min(face))+1;
 
 
 fclose(fid);

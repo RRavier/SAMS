@@ -1,4 +1,4 @@
-function Flows = ComputeDirectedFlows(dists)
+function Flows = ComputeDirectedFlows(dists,sourceInds,sinkInds)
 % Returns the directed flow matrix required for improving pairwise
 % correspondence
 %
@@ -11,17 +11,17 @@ function Flows = ComputeDirectedFlows(dists)
 
 [m,n] = size(dists);
 dists = .5*dists+.5*dists';         %symmetrize as sanity check
-Flows = cell(m,n);
+Flows = cell(length(sourceInds),length(sinkInds));
 
-for i = 1:m
-    
-    for j = 1:n
+progressbar
+for i = 1:length(sourceInds)
+    for j = 1:length(sinkInds)
         fprintf('%d %d \n',i,j);
         Flows{i,j} = sparse(m,n);
-        if i ~= j
+        if sourceInds(i) ~= sinkInds(j)
             dummy = sparse(m,n);
-            d_i = graphshortestpath(sparse(dists),i);
-            d_j = graphshortestpath(sparse(dists),j);
+            d_i = graphshortestpath(sparse(dists),sourceInds(i));
+            d_j = graphshortestpath(sparse(dists),sinkInds(j));
             for k = 1:m
                 for q = 1:n
                     if d_i(k) < d_i(q)
@@ -33,8 +33,10 @@ for i = 1:m
             end
             Flows{i,j} = dummy;
         else
-            Flows{i,j}(i,j) = 1;
+            Flows{i,j}(sourceInds(i),sinkInds(j)) = 1;
         end
     end
+    progressbar(i/m);
 end
+
 end

@@ -9,6 +9,8 @@ function write_seg_detail_csv(SegResult, filePath)
 	segNVert    = [];
 	segArea     = [];
 	segPercArea = [];
+    segDNE      = [];
+    segPercDNE  = [];
 
 	for i = 1:length(SegResult.mesh)
 		for j = 1:length(SegResult.mesh{i}.segment)
@@ -17,15 +19,18 @@ function write_seg_detail_csv(SegResult, filePath)
 			segNFace = [segNFace size(SegResult.mesh{i}.segment{j}.F, 2)];
 			segNVert = [segNVert size(SegResult.mesh{i}.segment{j}.V, 2)];
 			a = d.segmentArea{i}(j);
+            b = d.segmentDNE{i}(j);
 			segArea = [segArea a];
 			segPercArea = [segPercArea a/d.segmentAreaTotal(i)]; 
+            segDNE = [segDNE b];
+            segPercDNE = [segPercDNE b/d.segmentDNETotal(i)];
 		end
 	end
 
 	varNames = {'mesh_name', 'segment_id', 'n_face', 'n_vert', 'area', ...
-		'proportional_area'};
+		'proportional_area','dne','proportional_dne'};
 	dataTable = table(meshName', segNum', segNFace', segNVert', segArea', ...
-		segPercArea', 'VariableNames', varNames);
+		segPercArea', segDNE',segPercDNE', 'VariableNames', varNames);
 	writetable(dataTable, filePath);
 
 end

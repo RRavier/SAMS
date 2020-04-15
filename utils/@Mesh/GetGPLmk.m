@@ -28,7 +28,7 @@ BNN = min(100,G.nV);
 % atria = nn_prepare(G.V');
 % [idx, dist] = nn_search(G.V',atria,(1:G.nV)',BNN+1,-1,0.0);
 % fullPhi = sparse(repmat(1:G.nV,1,BNN+1),idx,exp(-dist.^2/bandwidth),G.nV,G.nV);
-[idx, dist] = knnsearch(G.V',G.V','K',BNN+1);
+[idx, dist] = knnsearch(real(G.V'),real(G.V'),'K',BNN+1);
 fullPhi = sparse(repmat(1:G.nV,1,BNN+1),idx,exp(-dist.^2/bandwidth),G.nV,G.nV);
 
 

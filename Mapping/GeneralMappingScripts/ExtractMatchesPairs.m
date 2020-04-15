@@ -25,7 +25,7 @@ function [matchedLmks,R]=ExtractMatchesPairs(temp,wtB,wtDecr,initMesh,...
 %% Load necessary variables
     names_path = [workingPath 'Names.mat'];
     dist_path = [workingPath 'GPDists.mat'];
-    maps_path = [workingPath 'MappingData/procMaps.mat'];
+    maps_path = [workingPath 'MappingData/InitialMaps/procMaps_' num2str(initMesh) '.mat'];
     flows_path = [workingPath 'Flows.mat'];
     samples_path = [workingPath 'ProcessedMAT/'];
 %% Don't unnecessarily run
@@ -37,6 +37,7 @@ load(names_path);
 load(dist_path);
 
 cPDistances = GPDists;
+disp(maps_path)
 load(maps_path);
 load(flows_path);
 
@@ -74,8 +75,8 @@ global vertWeight_21;
 vertWeight_21 = zeros(length(landmarksToTest_2),size(meshes{initMesh}.V,2));
 
 %% Load weighted flow matrices
-curFlow_12 = Flows{initMesh,finalMesh};
-curFlow_21 = Flows{finalMesh,initMesh};
+curFlow_12 = Flows{initMesh};
+curFlow_21 = curFlow_12';
 weightedFlows_12 = sparse((cPDistances.^2)).*(curFlow_12);
 weightedFlows_21 = sparse((cPDistances.^2)).*(curFlow_21);
 for i = 1:size(weightedFlows_12,1)
@@ -325,6 +326,7 @@ global vertWeight_12
 global numLandmarks
     nextVerts = find(weightedFlows(init,:));
     for i = 1:length(nextVerts)
+        mapMatrix
         nextLmks = mapMatrix{init,nextVerts(i)}(lmks);
         nextWeight = weight*weightedFlows(init,nextVerts(i));
         if (nextWeight < wtBnd) 
@@ -351,6 +353,8 @@ global vertWeight_21
 global numLandmarks
     nextVerts = find(weightedFlows(init,:));
     for i = 1:length(nextVerts)
+        max(lmks)
+        size(nextLmks)
         nextLmks = mapMatrix{init,nextVerts(i)}(lmks);
         nextWeight = weight*weightedFlows(init,nextVerts(i));
         if (nextWeight < wtBnd) 

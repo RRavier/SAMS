@@ -16,7 +16,8 @@ if nargin < 3
 end
 
 if isfield(options, 'mode')
-    if ~strcmpi(options.mode,'native') && ~strcmpi(options.mode,'rb')
+    if ~strcmpi(options.mode,'native') && ~strcmpi(options.mode,'rb') && ...
+            ~strcmpi(options.mode,'significance')
         options.mode = 'rb';
     end
 else
@@ -24,8 +25,8 @@ else
 end
 
 if strcmpi(options.mode, 'rb')
-    ub_pos = [0 0 1];
-    ub_neg = [1 0 0];
+    ub_pos = [1 0 0];
+    ub_neg = [0 0 1];
     lb = [0.9 0.9 0.8];
     
     pos = zeros(size(color_value));
@@ -34,10 +35,23 @@ if strcmpi(options.mode, 'rb')
     pos = pos/max(pos);
     neg = neg/max(neg);
     
-    color_data(color_value>=0, :) = pos(color_value>=0, :)*ub_pos + (1-pos(color_value>=0, :))*lb;
+    color_data(color_value>0, :) = pos(color_value>0, :)*ub_pos;
+    color_data(color_value==0, :) = pos(color_value==0, :)*ub_pos + (1-pos(color_value==0, :))*lb;
     color_data(color_value<0, :) = neg(color_value<0, :)*ub_neg + (1-neg(color_value<0, :))*lb;
 elseif strcmpi(options.mode, 'native')
     color_data = color_value;
+elseif strcmpi(options.mode,'significance')
+    darkRatio = options.darkRatio;
+    u_hot = [1 0 0];
+    u_warm = [1 1 0];
+    lb = [0.9 0.9 0.8];
+    
+    lightInds = boolean((color_value < Inf) .* (color_value > darkRatio));
+    darkInds = color_value <= darkRatio;
+    color_data(color_value == Inf,:) = repmat(lb,sum(color_value==Inf),1);
+    color_data(lightInds,:) = (color_value(lightInds)-darkRatio)/(1-darkRatio)*u_warm +...
+        (1-(color_value(lightInds)-darkRatio)/(1-darkRatio))*u_hot;
+    color_data(darkInds,:) = color_value(darkInds)/darkRatio*u_hot;
 end
 
 colormap('jet');

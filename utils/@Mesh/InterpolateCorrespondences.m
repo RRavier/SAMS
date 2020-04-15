@@ -35,7 +35,27 @@ TPS_FEATURESN_INDS = options.GPMatches(:,2)';
 TextureCoords2 = GN.Aux.UniformizationV(1:2,:);
 TextureCoords2(:,isnan(compl(TextureCoords2))) = ones(2,sum(isnan(compl(TextureCoords2))));
 TextureCoords1 = GM.Aux.UniformizationV(1:2,:);
+orig = TextureCoords1;
 
+origFEATURESM = orig(:,TPS_FEATURESM_INDS);
+baseFEATURESN = TextureCoords2(:,TPS_FEATURESN_INDS);
+bestRot = eye(2);
+bestDist = Inf;
+for t = 0:pi/500:2*pi
+    curRot = [cos(t) -sin(t);sin(t) cos(t)];
+    curFeatures = origFEATURESM;
+    for j = 1:size(origFEATURESM,2)
+        curFeatures(:,j) = curRot*curFeatures(:,j);
+    end
+    if norm(curFeatures-baseFEATURESN,'fro') < bestDist
+        bestRot = curRot;
+        bestDist = norm(curFeatures-baseFEATURESN,'fro');
+    end
+end
+
+for j = 1:size(TextureCoords1,2)
+    TextureCoords1(:,j) = bestRot*TextureCoords1(:,j);
+end
 TPS_FEATURESM = DISCtoPLANE(TextureCoords1(:,TPS_FEATURESM_INDS)','d2p');
 TPS_FEATURESN = DISCtoPLANE(TextureCoords2(:,TPS_FEATURESN_INDS)','d2p');
 
@@ -43,7 +63,7 @@ TPS_FEATURESN = DISCtoPLANE(TextureCoords2(:,TPS_FEATURESN_INDS)','d2p');
 TPS_FEATURESN = TPS_FEATURESN(ia,:);
 [TPS_FEATURESN,ia] = unique(TPS_FEATURESN,'rows');
 TPS_FEATURESM = TPS_FEATURESM(ia,:);
-orig = TextureCoords1;
+
 if (length(TPS_FEATURESM)>3) % TPS (Thin Plate Spline)
     tP = DISCtoPLANE(TextureCoords1','d2p');
     [ftps] = TEETH_calc_tps(TPS_FEATURESM,TPS_FEATURESN-TPS_FEATURESM);

@@ -81,33 +81,33 @@ for i = 1:length(Names)
     options.GPMatches = matchesPairs{i};
 
     rslt_GP = meshes{i}.InterpolateCorrespondences(meshes{frechMean},options);
-    rslt_cP = meshes{i}.ComputeContinuousProcrustes(meshes{frechMean},options);
+    %rslt_cP = meshes{i}.ComputeContinuousProcrustes(meshes{frechMean},options);
     
-    if rslt_GP.cPdist < rslt_cP.cPdist
+    %if rslt_GP.cPdist < rslt_cP.cPdist
         TextureCoords1{i} = rslt_GP.TextureCoords1;
         TextureCoords2{i} = rslt_GP.TextureCoords2;
         maps{i} = rslt_GP.cPmap;
         translation{i} = rslt_GP.translation;
         R{i} = rslt_GP.orthogonal;
-    else
-        TextureCoords1{i} = rslt_cP.TextureCoords1;
-        TextureCoords2{i} = rslt_cP.TextureCoords2;
-        maps{i} = rslt_cP.cPmap;
-        translation{i} = rslt_cP.translation;
-        R{i} = rslt_cP.orthogonal;
-    end
+    %else
+    %    TextureCoords1{i} = rslt_cP.TextureCoords1;
+    %    TextureCoords2{i} = rslt_cP.TextureCoords2;
+    %    maps{i} = rslt_cP.cPmap;
+    %    translation{i} = rslt_cP.translation;
+    %    R{i} = rslt_cP.orthogonal;
+    %end
     
     options.GPMatches = flip(matchesPairs{i},2);
 
     rslt_GP = meshes{frechMean}.InterpolateCorrespondences(meshes{i},options);
-    rslt_cP = meshes{frechMean}.ComputeContinuousProcrustes(meshes{i},options);
-    if rslt_GP.cPdist < rslt_cP.cPdist
+    %rslt_cP = meshes{frechMean}.ComputeContinuousProcrustes(meshes{i},options);
+    %if rslt_GP.cPdist < rslt_cP.cPdist
         TextureCoordsRev1{i} = rslt_GP.TextureCoords1;
         TextureCoordsRev2{i} = rslt_GP.TextureCoords2;
-    else
-        TextureCoordsRev1{i} = rslt_cP.TextureCoords1;
-        TextureCoordsRev2{i} = rslt_cP.TextureCoords2;
-    end
+    %else
+    %    TextureCoordsRev1{i} = rslt_cP.TextureCoords1;
+    %    TextureCoordsRev2{i} = rslt_cP.TextureCoords2;
+    %end
 end
 close all
 
@@ -138,7 +138,7 @@ totalPoints = meshes{frechMean}.Aux.UniformizationV(1:2,:)';
 
 totalVertList = (1:size(totalPoints,1))';
 norm2TotalPoints = totalPoints(:,1).^2 + totalPoints(:,2).^2;
-totalToRemove = totalVertList(norm2TotalPoints > .85^2);
+totalToRemove = totalVertList(norm2TotalPoints > maxReparamRadius^2);
 totalPoints(totalToRemove,:) = [];
 
 dTri = delaunay(totalPoints);
@@ -187,6 +187,7 @@ for i = 1:length(Names)
 end
 
 nanVerts = unique(totalNaNVerts);
+
 for k = 1:length(nanVerts)
     for i = 1:length(Names)
         BC = triArray{i}.cartesianToBarycentric((1:size(meshes{i}.F,2))',repmat(totalMesh.V(1:2,nanVerts(k))',size(meshes{i}.F,2),1));
@@ -197,10 +198,7 @@ for k = 1:length(nanVerts)
             bestInd = bestInd(1);
             tind = tind(bestInd);
         else
-            warning('Could not find point in triangulation, should never occur');
-            disp(nanVerts(k))
-            disp(i)
-            pause()
+            disp('Could not find point in triangulation, should never occur');
             rowMins = min(BC,[],2);
             [~,tind] = min(rowMins);
         end
@@ -232,28 +230,30 @@ for i = 1:length(Names)
         dists(i,j) = norm(newMeshList{i}.V-newMeshList{j}.V,'fro');
     end
 end
-[Y,~] = mdscale(dists,3);
+[Y,~] = mdscale(dists,3,'Criterion','strain');
 save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
 
 %% Now compute all texture coordinates via composition
 disp('Computng all maps between all surfaces via composition')
-TextureCoordsSource = cell(length(Names),length(Names));
-TextureCoordsTarget = TextureCoordsSource;
 
+touch([workingPath 'TextureCoordsSource/']);
+touch([workingPath 'TextureCoordsTarget/']);
 progressbar
 
 for i = 1:length(Names)
-    TextureCoordsSource{i,i} = TextureCoords1{i};
-    TextureCoordsTarget{i,i} = TextureCoords1{i};
+    TextureCoordsSource = cell(length(Names),1);
+    TextureCoordsTarget = TextureCoordsSource;
+    TextureCoordsSource{i} = TextureCoords1{i};
+    TextureCoordsTarget{i} = TextureCoords1{i};
     parfor j =1:length(Names)
         if i ~= j
-            [TextureCoordsSource{i,j},TextureCoordsTarget{i,j}] ...
+            [TextureCoordsSource{j},TextureCoordsTarget{j}] ...
                 = ComposeTextures([TextureCoords1(i) TextureCoordsRev1(j)]...
                 ,[TextureCoords2(i) TextureCoordsRev2(j)]);
         end
         %progressbar(((i-1)*length(Names)+j)/(length(Names)^2));
     end
     progressbar(i/length(Names));
+    save([workingPath 'TextureCoordsSource/TextureCoordsSource_' num2str(i) '.mat'],'TextureCoordsSource');
+    save([workingPath 'TextureCoordsTarget/TextureCoordsTarget_' num2str(i) '.mat'],'TextureCoordsTarget');
 end
-save([workingPath 'TextureCoordsSource.mat'],'TextureCoordsSource');
-save([workingPath 'TextureCoordsTarget.mat'],'TextureCoordsTarget');

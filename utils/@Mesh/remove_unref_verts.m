@@ -5,7 +5,7 @@ function [V, F] = remove_unref_verts(G)
 
 	nVert = size(G.V, 2);
 	unrefVertIdx = [];
-	for i = 1:nVert;
+	for i = 1:nVert
 		if length(find(ismember(G.F,i))) == 0
 			unrefVertIdx = [unrefVertIdx i];
 		end
