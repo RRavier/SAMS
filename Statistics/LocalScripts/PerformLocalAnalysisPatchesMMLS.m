@@ -2,12 +2,13 @@ close all
 
 FPC = {'None','FWER','Bonferroni'};
 options.mode = 'native';
+radiusType = 'discrete';
 %alpha = significance level
 %method = type of T-test to use. Values are
 %FPC = method of false positive correction
 localPath = [statPath 'PairwiseLocal/'];
 touch(localPath);
-
+frechMeanDir = 'D://Work/ToothAndClaw/FrechetMean/FrechetMeans/Patch_';
 %% Do specified pairwise testing for each specimen type in Groups
 % Only makes sense for each indiivudal specimen, cross specimens not
 % included
@@ -74,10 +75,11 @@ for s = 1:length(SpecimenTypes)
         end
         %% Extract Patches based on Vertices and separate by group
         patchList = cell(totalMean.nV,1);
-        meanPatches = patchList;
+        meanPatches = patchList; euMeans = patchList; adMeans = patchList;
+        peroMeans = patchList;
         progressbar
         for i = 1:totalMean.nV
-            curPatches = cell(length(newMeshList),1);
+            curPatches = cell(length(newMeshList)+length(unLabels),1);
             triInds = find(sum(ismember(totalMean.F,patchInds{i}))==3);
             [~,faces] = ismember(totalMean.F(:,triInds),patchInds{i});
             for j = 1:length(newMeshList)
@@ -85,8 +87,24 @@ for s = 1:length(SpecimenTypes)
                 curPatches{j}.V = curPatches{j}.V-mean(curPatches{j}.V,2);
                 curPatches{j}.V = curPatches{j}.V/norm(curPatches{j}.V,'fro');
             end
+            load([frechMeanDir num2str(i) '/Adapis_Frechet.mat']);
+            Frechet_Mean = Frechet_Mean - mean(Frechet_Mean,2);
+            Frechet_Mean = Frechet_Mean/norm(Frechet_Mean,'fro');
+            adMeans{i} = Mesh('VF',Frechet_Mean,faces);
+            curPatches{length(newMeshList)+1} = adMeans{i};
+            load([frechMeanDir num2str(i) '/Eulemur_Frechet.mat']);
+            Frechet_Mean = Frechet_Mean - mean(Frechet_Mean,2);
+            Frechet_Mean = Frechet_Mean/norm(Frechet_Mean,'fro');
+            euMeans{i} = Mesh('VF',Frechet_Mean,faces);
+            curPatches{length(newMeshList)+2} = euMeans{i};
+            load([frechMeanDir num2str(i) '/Perodicticus_Frechet.mat']);
+            Frechet_Mean = Frechet_Mean - mean(Frechet_Mean,2);
+            Frechet_Mean = Frechet_Mean/norm(Frechet_Mean,'fro');
+            peroMeans{i} = Mesh('VF',Frechet_Mean,faces);
+            curPatches{length(newMeshList)+3} = peroMeans{i};
             patchList{i} = curPatches;
-            meanPatches{i} = Mesh('VF',totalMean.V(:,patchInds{i}),faces);
+            meanVerts = (adMeans{i}.V+euMeans{i}.V+peroMeans{i}.V)/3;
+            meanPatches{i} = Mesh('VF',meanVerts,faces);
             meanPatches{i}.V = meanPatches{i}.V-mean(meanPatches{i}.V,2);
             meanPatches{i}.V = meanPatches{i}.V/norm(meanPatches{i}.V,'fro');
             progressbar(i/totalMean.nV);
@@ -188,28 +206,28 @@ for s = 1:length(SpecimenTypes)
             end
             exponents(p) = exp;
             %set all folders
-            touch([curPath 'HeatMaps/']);
-            touch([curPath 'HeatMaps/' keys{g} '/']);
-            touch([curPath 'HeatMaps/' keys{g} '/One_Sample/']);
+            touch([curPath 'HeatMapsMMLS/']);
+            touch([curPath 'HeatMapsMMLS/' keys{g} '/']);
+            touch([curPath 'HeatMapsMMLS/' keys{g} '/One_Sample/']);
             for c = 1:length(FPC)
-                touch([curPath 'HeatMaps/' keys{g} '/One_Sample/Vertex/' FPC{c} '/']);
-                touch([curPath 'HeatMaps/' keys{g} '/One_Sample/Patch/AverageMean/' alignmentMethod '/' FPC{c} '/']);
-                touch([curPath 'HeatMaps/' keys{g} '/One_Sample/Vertex/' FPC{c} '/'...
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/One_Sample/Vertex/' FPC{c} '/']);
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/One_Sample/Patch/AverageMean/' alignmentMethod '/' FPC{c} '/']);
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/One_Sample/Vertex/' FPC{c} '/'...
                     num2str(pValues(p)*10^(exp)) 'e-' num2str(exp) '/']);
-                touch([curPath 'HeatMaps/' keys{g} '/One_Sample/Patch/AverageMean/' alignmentMethod '/' FPC{c} '/'...
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/One_Sample/Patch/AverageMean/' alignmentMethod '/' FPC{c} '/'...
                     num2str(pValues(p)*10^(exp)) 'e-' num2str(exp) '/']);
             end
             for t = 1:length(TTestType)
-                touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/']);
-                touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Vertex/']);
-                touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/']);
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/']);
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Vertex/']);
+                touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/']);
                 for c = 1:length(FPC)
-                    touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Vertex/' FPC{c} '/']);
-                    touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_'...
+                    touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Vertex/' FPC{c} '/']);
+                    touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_'...
                         num2str(radius) FPC{c} '/']);
-                    touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Vertex/' FPC{c} '/'...
+                    touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Vertex/' FPC{c} '/'...
                         num2str(pValues(p)*10^(exp)) 'e-' num2str(exp) '/']);
-                    touch([curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_' num2str(radius)...
+                    touch([curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_' num2str(radius)...
                         '/' FPC{c} '/' num2str(pValues(p)*10^(exp)) 'e-' num2str(exp) '/']);
                     
                 end
@@ -345,7 +363,7 @@ for s = 1:length(SpecimenTypes)
                                     'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
                                 %Quick Conversion To Scientific Notation
                                 setappdata(gcf, 'StoreTheLink', Link);
-                                figPath = [curPath 'HeatMaps/' keys{g} '/OneSample/Patch/' alignmentMethod '/' FPC{c} '/' ...
+                                figPath = [curPath 'HeatMapsMMLS/' keys{g} '/OneSample/Patch/' alignmentMethod '/' FPC{c} '/' ...
                                     num2str(pValues(p)*10^(exponents(p))) ...
                                     'e-' num2str(exponents(p)) '/'];
                                 touch(figPath);
@@ -374,9 +392,9 @@ for s = 1:length(SpecimenTypes)
                         else
                             switch curTest
                                 case 'EqualCovariance'
-                                    [~,pVal] = TTest_StandardPatch(embedCoords,inds1,inds2);
+                                    [~,pVal] = TTest_StandardPatchMMLS(embedCoords,inds1,inds2,length(newMeshList)+i,length(newMeshList)+j);
                                 case 'UnequalCovariance'
-                                    [~,pVal] = TTest_UnequalPatch(embedCoords,inds1,inds2);
+                                    [~,pVal] = TTest_UnequalPatchMMLS(embedCoords,inds1,inds2,length(newMeshList)+i,length(newMeshList)+j);
                                 case 'EqualCovariance_Permutation'
                                     [~,pVal] = TTest_Standard_PermutationPatch(embedCoords,inds1,inds2,numPerm);
                                 case 'UnequalCovariance_Permutation'
@@ -455,7 +473,7 @@ for s = 1:length(SpecimenTypes)
                                     'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
                                 %Quick Conversion To Scientific Notation
                                 setappdata(gcf, 'StoreTheLink', Link);
-                                 figPath = [curPath 'HeatMaps/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_'...
+                                 figPath = [curPath 'HeatMapsMMLS/' keys{g} '/' TTestType{t} '/Patch/' alignmentMethod '/Radius_'...
                                      num2str(radius) '/' FPC{c} '/' num2str(pValues(p)*10^(exponents(p)))...
                                      'e-' num2str(exponents(p)) '/'];
                                 touch(figPath);

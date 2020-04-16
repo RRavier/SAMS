@@ -1,13 +1,14 @@
 close all
 
 FPC = {'None','FWER','Bonferroni'};
-options.mode = 'native';
+
 %alpha = significance level
 %method = type of T-test to use. Values are
 %FPC = method of false positive correction
 localPath = [statPath 'PairwiseLocal/'];
 touch(localPath);
-
+options.mode = 'significance';
+options.darkRatio = 0.5;
 %% Do specified pairwise testing for each specimen type in Groups
 % Only makes sense for each indiivudal specimen, cross specimens not
 % included
@@ -79,6 +80,7 @@ for s = 1:length(SpecimenTypes)
                 end
             end
         end
+        %% Performing analysis
         for i = 1:length(labelGroups)
             for j = (i+1):length(labelGroups)
                 %% Set up graphical files
@@ -126,7 +128,7 @@ for s = 1:length(SpecimenTypes)
                 if length(groups1) == 1 || length(groups2) == 1
                     if max(length(groups1),length(groups2)) <= size(groups1{1}.V,1)
                         disp(['Too few samples to do statistical test, skipping']);
-                    continue;
+                        continue;
                     else
                         disp(['Performing 1-sample T-test'])
                         testPath = [localPath 'OneSample/'];
@@ -136,7 +138,7 @@ for s = 1:length(SpecimenTypes)
                             load([testPath unLabels{i} '_' unLabels{j} '.mat'])
                         else
                             [~,pVal] = TTest_OneSample(groups1,groups2);
-                            save([localPath unLabels{i} '_' unLabels{j} '.mat'],'pVal');
+                            save([testPath unLabels{i} '_' unLabels{j} '.mat'],'pVal');
                         end
                         [sortP,idx] = sort(pVal);
                         for p = 1:length(pValues)
@@ -155,16 +157,17 @@ for s = 1:length(SpecimenTypes)
                                     disp(['No significant points detected for ' curFPC ' FPC, skipping']);
                                     continue;
                                 end
-                                extrPts = double((1-pVal) >= (1-maxP));
-                                heatMap = zeros(1,length(extrPts));
-                                for k = 1:length(extrPts)
-                                    heatMap(idx(k)) = extrPts(idx(k))*(0.2+0.8*(maxP-pVal(idx(k)))/(maxP+0.00001));
-                                end
+                                 extrPts = (1-pVal) >= (1-maxP);
+                                heatMap = zeros(length(extrPts),1);
+                                heatMap(idx) = 1/length(find(extrPts)):1/length(find(extrPts)):...
+                                    length(idx)/1/length(find(extrPts));
+                                heatMap(heatMap>1)=Inf;
                                 clear h
                                 clear Link
+                                %options.baseSig = pValues(p);
                                 figure
                                 h(1) = subplot(1,2,1);
-                                g1Mean.ViewFunctionOnMesh(heatMap',options);
+                                g1Mean.ViewFunctionOnMesh(heatMap,options);
                                 hold on
                                 axis off
                                 if viewDisplace
@@ -185,7 +188,7 @@ for s = 1:length(SpecimenTypes)
                                         displace(1,:),displace(2,:),displace(3,:),'Color','k');
                                 end
                                 h(2) = subplot(1,2,2);
-                                g2Mean.ViewFunctionOnMesh(heatMap',options);
+                                g2Mean.ViewFunctionOnMesh(heatMap,options);
                                 hold on
                                 axis off
                                 if viewDisplace
@@ -262,16 +265,17 @@ for s = 1:length(SpecimenTypes)
                                     disp(['No significant points detected for ' curFPC ' FPC, skipping']);
                                     continue;
                                 end
-                                extrPts = double((1-pVal) >= (1-maxP));
-                                heatMap = zeros(1,length(extrPts));
-                                for k = 1:length(extrPts)
-                                    heatMap(idx(k)) = extrPts(idx(k))*(0.2+0.8*(maxP-pVal(idx(k)))/(maxP+0.00001));
-                                end
+                                extrPts = (1-pVal) >= (1-maxP);
+                                heatMap = zeros(length(extrPts),1);
+                                heatMap(idx) = 1/length(find(extrPts)):1/length(find(extrPts)):...
+                                    length(idx)/1/length(find(extrPts));
+                                heatMap(heatMap>1)=Inf;
                                 clear h
                                 clear Link
                                 figure
                                 h(1) = subplot(1,2,1);
-                                g1Mean.ViewFunctionOnMesh(heatMap',options);
+                                options.baseSig = pValues(p);
+                                g1Mean.ViewFunctionOnMesh(heatMap,options);
                                 hold on
                                 axis off
                                 if viewDisplace
@@ -292,7 +296,7 @@ for s = 1:length(SpecimenTypes)
                                         displace(1,:),displace(2,:),displace(3,:),'Color','k');
                                 end
                                 h(2) = subplot(1,2,2);
-                                g2Mean.ViewFunctionOnMesh(heatMap',options);
+                                g2Mean.ViewFunctionOnMesh(heatMap,options);
                                 hold on
                                 axis off
                                 if viewDisplace
@@ -318,7 +322,7 @@ for s = 1:length(SpecimenTypes)
                                     num2str(pValues(p)*10^(exp)) ...
                                     'e-' num2str(exp) '/'];
                                 touch(figPath);
-                                saveas(gcf,[figPath unLabels{i} '_' unLabels{j}]);  
+                                saveas(gcf,[figPath unLabels{i} '_' unLabels{j}]); 
                                 close all
                             end
                         end      

@@ -31,8 +31,8 @@ if exist([workingPath 'Flags.mat'])
                 error('Script stopping, please fix problems with meshes and then try again.');
             else
                 Flags('AreHomeomorphic') = 1;
-                save([workingPath 'Flags.mat'],'Flags');
                 Flags('isDisc') = rslt.isDisc;
+                save([workingPath 'Flags.mat'],'Flags');
             end
         else
             disp('Already verified homeomorphisms');
@@ -64,7 +64,7 @@ end
 
 
 disp('Computing Necessary Mesh Features');
-
+problemMeshes = zeros(length(Names),1);
 if ~isKey(Flags,'FeaturesComputed') || ForceFeatureRecomputation
     if isKey(Flags,'FeaturesComputed')
         disp('Features are already computed, you may safely abort');

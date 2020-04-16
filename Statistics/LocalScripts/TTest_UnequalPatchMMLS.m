@@ -1,4 +1,4 @@
-function [f,p]=TTest_UnequalPatch(embedCoords,Group1,Group2)
+function [f,p]=TTest_UnequalPatch(embedCoords,Group1,Group2,mean1Ind,mean2Ind)
 %
 % [h p] =hotelT2(v1,v2)
 %
@@ -22,15 +22,18 @@ function [f,p]=TTest_UnequalPatch(embedCoords,Group1,Group2)
 n1 = length(Group1); n2 = length(Group2);
 totalSamples = [Group1 Group2];
 
+
 %% Extract means and covariances
 disp('Extracting means and covariances')
 mean1 = cell(length(embedCoords),1); mean2 = mean1;
 cov1 = mean1; cov2 = mean2;
 for i = 1:length(embedCoords)
-    mean1{i} = mean(embedCoords{i}(Group1,:));
-    mean2{i} = mean(embedCoords{i}(Group2,:));
-    cov1{i} = cov(embedCoords{i}(Group1,:));
-    cov2{i} = cov(embedCoords{i}(Group2,:));
+    mean1{i} = embedCoords{i}(mean1Ind,:);
+    mean2{i} = embedCoords{i}(mean2Ind,:);
+    cov1{i} = (embedCoords{i}(Group1,:)-mean1{i})'*(embedCoords{i}(Group1,:)-mean1{i});
+    cov1{i} = cov1{i}/(length(Group1)-1);
+    cov2{i} = (embedCoords{i}(Group2,:)-mean2{i})'*(embedCoords{i}(Group2,:)-mean2{i});
+    cov2{i} = cov2{i}/(length(Group2)-1);
 end
 %% Computing actual statistic value
 t2 = zeros(length(embedCoords),1);

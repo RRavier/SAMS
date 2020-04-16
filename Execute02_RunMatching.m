@@ -1,19 +1,22 @@
 initialize;
 MappingSetup;
 load([workingPath 'Flags.mat'])
-ExtractInitialMappings;
-ComputeFeatureMatching;
-Flows = ComputeDirectedFlows(GPDists);
-save([workingPath 'Flows.mat'],'Flows');
-MatchesPairsWrapper;
+load([workingPath 'Names.mat'])
+addpath(genpath('./VisualizationScripts/'));
+mappingPath = [workingPath 'MappingData/'];
 
-disp('If correspondences are not good, abort and tune parameters via Ctrl+C.')
-pause(20);
-if Flags('isDisc') == 0
-    SetupHypOrb;
-    CreateFinalMappingsSphere;
+MappingSetupAndFlowExtraction;
+
+if ~isKey(Flags,'featureMappings')
+    ComputeFeatureMatching;
 else
-    CreateFinalMappingsDisc;
+    disp('Feature mappings already computed');
+    load([mappingPath 'FeatureMatches.mat']);
 end
-%Plotting vertex correspondences for reparametrized meshes
-plotColorMap;
+
+MatchesPairsOnFlyWrapper;
+RefineInitialMatches;
+disp(['Sparse correspondences computed. Please visualize with ' ...
+    'visualizeLandmarkCorrespondences before continuing']);
+
+

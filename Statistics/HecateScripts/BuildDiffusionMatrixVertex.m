@@ -21,7 +21,7 @@ end
 sDists = exp(-sDists.^2/baseEps);
 
 %% build augmented diffusion matrix
-
+load([workingPath 'softMapsMatrix.mat']);
 diffMatrixSize = vIdxCumSum(end);
 diffMatrixSizeList = [0; vIdxCumSum];
 diffMatrixSizeList(end) = []; % treated as block shifts
@@ -30,10 +30,12 @@ diffMatrixColIdx = [];
 diffMatrixVal = [];
 
 cBack = 0;
+
+
 disp('Constructing diffusion matrix');
 progressbar
 for j = 1:n
-    load([workingPath 'SoftMapsMatrix/SoftMapsMatrix_' num2str(j) '.mat']);
+    [~,idx] = sort(dists(:,j)); idx = idx(2:(1+BNN));
     for nns = 1:BNN
         if (sDists(j, nns) == 0)
             continue;
@@ -42,7 +44,7 @@ for j = 1:n
         
         %%% load texture coordinates
  
-        AugKernel12 = softMapsMatrix{k};
+        AugKernel12 = softMapsMatrix{j, k};
 
         % Is the next bit meant to be repeated?        
         [rowIdx, colIdx, val] = find(AugKernel12);
@@ -60,4 +62,4 @@ end
 
 H = sparse(diffMatrixRowIdx,diffMatrixColIdx,diffMatrixVal,diffMatrixSize,diffMatrixSize);
 
-save([workingPath 'DiffusionMatrix.mat'],'H');
+save([workingPath 'DiffusionMatrixVertex.mat'],'H');

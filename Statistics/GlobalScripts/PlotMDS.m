@@ -16,7 +16,7 @@ for g = 1:length(keys)
     close all
     labels = Groups(keys{g});
     unLabels = unique(labels);
-    colors = colormap(colorcube(4+length(unLabels)));
+    colors = distinguishable_colors(length(unLabels));
 
     figure; hold on;
     for i = 1:length(unLabels)

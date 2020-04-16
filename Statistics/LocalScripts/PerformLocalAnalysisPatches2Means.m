@@ -250,11 +250,11 @@ for s = 1:length(SpecimenTypes)
                 touch(testPath);
                 startInd = 1;
                 pVal = zeros(size(embedCoords));
-%                 if exist([testPath unLabels{i} '_' unLabels{j} '.mat']) && ~RecomputeLocalStats
-%                     disp('Raw p-values already computed, reloading...');
-%                     load([testPath unLabels{i} '_' unLabels{j} '.mat'])
-%                     startInd = max(find(pVal))+1;
-%                 end
+                if exist([testPath unLabels{i} '_' unLabels{j} '.mat']) && ~RecomputeLocalStats
+                    disp('Raw p-values already computed, reloading...');
+                    load([testPath unLabels{i} '_' unLabels{j} '.mat'])
+                    startInd = max(find(pVal))+1;
+                end
                    
                 progressbar
                 for v = startInd:length(embedCoords)

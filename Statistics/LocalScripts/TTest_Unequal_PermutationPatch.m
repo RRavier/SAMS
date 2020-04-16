@@ -49,7 +49,7 @@ else
         permList(k,:) = randperm(n1+n2,n1);
     end  
 end
-
+totalInds = [Group1 Group2];
 %% Run permutations
 permVals = zeros(numPerms,length(embedCoords));
 progressbar
@@ -59,8 +59,8 @@ for k = 1:numPerms
     t2 = zeros(1,length(embedCoords));
     curPerm = permList(k,:);
     parfor i=1:length(embedCoords)
-        V1{i} = embedCoords{i}(curPerm,:);
-        V2{i} = embedCoords{i}(setdiff(1:(n1+n2),curPerm),:);
+        V1{i} = embedCoords{i}(totalInds(curPerm),:);
+        V2{i} = embedCoords{i}(totalInds(setdiff(1:(n1+n2),curPerm)),:);
         t2(i)=(mean(V2{i})-mean(V1{i}))*((cov(V1{i})/n1+cov(V2{i})/n2)\(mean(V2{i})-mean(V1{i}))');
     end
     clear V1
