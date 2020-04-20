@@ -2,11 +2,11 @@
 %% Set input and output paths
 
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-basePath = 'D:\Dropbox\SAMSResults\Prime_MEE\Default\RawOFF\';
-distancePath = 'D:\Dropbox\SAMSResults\Prime_MEE\Default\GPDists.mat';
+dataPath = 'D:\Work\ToothAndClaw\ToothAndClawData\KMeansSampleTeeth\aligned_output\aligned\';
+distancePath = 'D:\Work\ToothAndClaw\ToothAndClawData\KMeansSampleTalus\aligned_output\GPDMat_High.mat';
 
 %Base path for everything in a project, may include multiple groups
-projectDir = 'D://Dropbox/SAMSResults/Dissertation_Teeth/';
+projectDir = 'D://Dropbox/SAMSResults/KMeansSampleTeeth/';
 
 %The path of the current group you are working on
 specimenGroup = 'Default';
