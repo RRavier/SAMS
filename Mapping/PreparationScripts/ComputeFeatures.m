@@ -12,8 +12,7 @@ options.ConfMaxLocalWidth = ConfMaxLocalWidth;
 options.GaussMaxLocalWidth = GaussMaxLocalWidth;           
 options.MeanMinLocalWidth = MeanMinLocalWidth;              
 options.DNEMaxLocalWidth = DNEMaxLocalWidth;               
-options.SmoothCurvatureFields = SmoothCurvatureFields;       
-options.NumDensityPts = NumDensityPts;                
+options.SmoothCurvatureFields = SmoothCurvatureFields;                   
 options.numGPLmks = numGPLmks;                    
 options.pointCloud = 0;
 
