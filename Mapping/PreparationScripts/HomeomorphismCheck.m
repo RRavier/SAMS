@@ -16,6 +16,7 @@ numDiscs = 0; numNonDiscs = 0;
 isMan = 2;
 progressbar
 for i = 1:length(Names)
+    disp(Names{i})
     G = Mesh('off',[workingPath 'RawOFF/' Names{i} '.off']);
     delInds = [];
     for q = 1:G.nV
@@ -39,6 +40,7 @@ for i = 1:length(Names)
 
     try
         isManifoldResult = isManifold(G);
+        G.FindOrientedBoundaries;
     catch
         isManifoldResult.manifold = 0;
     end
@@ -46,7 +48,8 @@ for i = 1:length(Names)
     if ~(isManifoldResult.manifold == 1)
         problemMeshes = [problemMeshes Names{i}];
     else
-        boundary = G.FindOrientedBoundaries;
+        [boundary,~] = G.FindOrientedBoundaries;
+        isManifoldResult.manifold = 0;
         if min(size(boundary)) == 0
             numNonDiscs = numNonDiscs+1;
             nonDiscBoundaryMeshes = [nonDiscBoundaryMeshes Names{i}];
@@ -54,6 +57,7 @@ for i = 1:length(Names)
             numDiscs = numDiscs+1;
             discBoundaryMeshes = [discBoundaryMeshes Names{i}];
         else
+            problemMeshes = [problemMeshes Names{i}];
             badBoundaryMeshes = [badBoundaryMeshes Names{i}];
         end
     end
@@ -62,13 +66,24 @@ end
 
 result.problemMeshes = problemMeshes;
 result.badBoundaryMeshes = badBoundaryMeshes;
-result.discBoundaryMeshes = discBoundaryMeshes;
-result.nonDiscBoundaryMeshes = nonDiscBoundaryMeshes;
+result.discTopologyMeshes = discBoundaryMeshes;
+result.nonDiscTopologyMeshes = nonDiscBoundaryMeshes;
 result.numNonDiscs = numNonDiscs;
 result.numDiscs = numDiscs;
 
+%In future this should be replaced with code that checks homology
+if ~isempty(badBoundaryMeshes)
+    disp('ALERT: The manifold meshes do not have consistent topology. Please resolve before proceeding.');
+    disp(['There are ' num2str(numDiscs) ' of those meshes with disc topology and ' ...
+        num2str(numNonDiscs) ' with non-disc topology.']);
+    disp(['There are ' num2str(length(badBoundaryMeshes)) ...
+        ' meshes with boundary problems. Please check appropriately.']);
+    result.isDisc = -1;
+    isMan = -1;
+end
+
 if ~isempty(problemMeshes)
-    disp('ALERT: Some meshes are not manifolds. Please clean these meshes before proceeding.')
+    disp('ALERT: The following meshes must be cleaned before proceeding:')
     for i = 1:length(result.problemMeshes)
         disp(result.problemMeshes{i});
     end
@@ -76,16 +91,26 @@ if ~isempty(problemMeshes)
     isMan = -1;
 end
 
-%In future this should be replaced with code that checks homology
-if ~isempty(badBoundaryMeshes)
-    disp('ALERT: The manifold meshes do not have consistent topology. Please resolve before proceeding.');
-    disp(['There are ' num2str(numDiscs) ' of those meshes with disc topology and ' ...
-        num2str(numNonDiscs) ' with non-disc topology.\n There are ' num2str(length(badBoundaryMeshes)) ...
-        ' meshes with boundary problems. Please check appropriately.']);
-    result.isDisc = -1;
-    isMan = -1;
+%% Print results to file
+fid = fopen([workingPath 'problemMeshes.txt'],'w');
+for i = 1:length(problemMeshes)
+    fprintf(fid,[result.problemMeshes{i} '\n']);
 end
+fclose(fid);
 
+fid = fopen([workingPath 'discTopologyMeshes.txt'],'w');
+for i = 1:length(result.discTopologyMeshes)
+    fprintf(fid,[result.discTopologyMeshes{i} '\n']);
+end
+fclose(fid);
+
+fid = fopen([workingPath 'nonDiscTopologyMeshes.txt'],'w');
+for i = 1:length(result.nonDiscTopologyMeshes)
+    fprintf(fid,[result.nonDiscTopologyMeshes{i} '\n']);
+end
+fclose(fid);
+
+%% Remaining output
 if ~(isMan == -1)
     if numNonDiscs > 0
         result.isDisc = 0;
