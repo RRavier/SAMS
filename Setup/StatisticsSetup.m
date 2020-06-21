@@ -2,19 +2,25 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-MetaGroupBasePath = 'D://Dropbox/SAMSResults/USDAPrime/';
+projectDir = 'D://Dropbox/SAMSResults/KMeansSampleTeeth_GroupsOnly/';
+
 
 %The list of groups for project
-MetaGroups = {'Default'};
+specimenGroup = 'Default';
 
 %The path of the current group you are working on
-workingPath = 'D://Dropbox/SAMSResults/USDAPrime/Default/';
 
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
-infoPath = '';
 
-                        
+spreadsheetPath = 'D://Dropbox/SAMSResults/KMeansSampleTalus_GroupsOnly/taxa_code.xlsx';
+
+groupsToCompare = {'GroupsToCompare'};
+
+numLmks = 30;
+
+isoRadius = 8;
+anisoRadius = 5;
 %% Local Statistical Analysis Parameters
 
 %Array of p-values to plot significance maps for

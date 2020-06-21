@@ -4,6 +4,7 @@ load([workingPath 'MappingData/FeatureMatches.mat']);
 
 
 frechMesh = meshList{frechMean};
+[bd_f,~] = frechMesh.FindOrientedBoundaries;
 progressbar
 for i = 1:length(Names)
     if i ~= frechMean
@@ -28,7 +29,7 @@ for i = 1:length(Names)
         %newMatches = matchesPairs{i}(1,:);
         
         numMatches = size(newMatches,1);
-        while numMatches <= maxNumMatches
+        while numMatches < maxNumMatches
             if isempty(possibleMatches)
                 break;
             end

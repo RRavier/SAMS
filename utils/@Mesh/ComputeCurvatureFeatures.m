@@ -36,13 +36,22 @@ end
 Conf = Aux.Conf;
 [~,TriAreas] = GM.ComputeSurfaceArea;
 
+%Make weight matrix...
+WeightMatrix = GM.F2V;
+for j = 1:GM.nF
+    WeightMatrix(j,:) = WeightMatrix(j,:).*(1./Aux.VertArea);
+end
+for j = 1:GM.nV
+    WeightMatrix(:,j) = TriAreas.*WeightMatrix(:,j);
+end
 
 for j=1:SmoothCurvatureFields
-    WeightMatrix = repmat(TriAreas,1,GM.nV).*GM.F2V.*repmat(1./Aux.VertArea,GM.nF,1);
+    
     
     CgaussFace = mean(Cgauss(GM.F));
     Cgauss = CgaussFace*WeightMatrix;
-    
+    CmeanFace = mean(Cmean(GM.F));
+    Cmean = CmeanFace*WeightMatrix;
     ConfFace = mean(Conf(GM.F));
     Conf = ConfFace*WeightMatrix;
 end

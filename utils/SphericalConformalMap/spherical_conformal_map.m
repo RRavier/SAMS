@@ -17,9 +17,9 @@ function map = spherical_conformal_map(v,f)
 % https://scholar.harvard.edu/choi
 
 %% Check whether the input mesh is genus-0
-if length(v)-3*length(f)/2+length(f) ~= 2
-    error('The mesh is not a genus-0 closed surface.\n');
-end
+% if length(v)-3*length(f)/2+length(f) ~= 2
+%     error('The mesh is not a genus-0 closed surface.\n');
+% end
 
 %% Find the most regular triangle as the "big triangle"
 temp = v(reshape(f',1,length(f)*3),1:3);

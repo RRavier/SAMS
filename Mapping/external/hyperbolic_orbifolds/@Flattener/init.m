@@ -1,6 +1,7 @@
 function init(obj)
 tid=tic;
 TR=triangulation(obj.M_orig.F',obj.M_orig.V');
+
 bdry=TR.freeBoundary();
 if ~isempty(bdry)
     bdry=bdry(:,1);    
@@ -19,6 +20,7 @@ else
     pathEnds=unique(pathEnds);
     
     all_binds = TR.freeBoundary();
+    all_binds
     assert(all(all_binds(:,2)==all_binds([2:end,1],1)));
     all_binds=all_binds(:,1);
     ind=find(all_binds==startP);
@@ -30,7 +32,7 @@ else
     
     assert(length(obj.cut_cone_inds)==length(obj.P));
 end
-obj.M_cut
+
 L = cotmatrix(obj.M_cut.V,obj.M_cut.T);
 
 obj.L=L;

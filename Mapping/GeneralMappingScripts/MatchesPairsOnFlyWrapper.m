@@ -15,7 +15,7 @@ startPathWt = exp(-(mean(distList)^2));
 %% Run Matches Pairs Procedure
 if ~isfield(Flags,'PutativeMatchesComputed') || ForcePutativeMatching
     disp('Computing Pairwise Matchings for Mesh:');
-    parfor i = 1:length(Names)
+    for i = 1:length(Names)
         disp(i)
         if (i ~=frechMean)
             [matchesPairs{i},~] = ExtractMatchesPairsOnFly(pathWtTemp,startPathWt,pathWtDecr,...

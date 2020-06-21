@@ -101,7 +101,6 @@ xq = frechUni.V(1,:); yq = frechUni.V(2,:);
 pointsToUse = ones(frechUni.nV,1);
 
 for i = 1:length(Names)
-    disp(i)
     if i == frechMean
         continue;
     else
@@ -109,10 +108,11 @@ for i = 1:length(Names)
         curBd = curMesh.FindOrientedBoundaries;
         xv = curMesh.V(1,curBd); yv = curMesh.V(2,curBd);
         isInside = inpolygon(xq,yq,xv,yv);
+        length(find(isInside))
         pointsToUse = pointsToUse .* (isInside');
     end
 end
-
+%%
 totalMesh = Mesh('VF',frechUni.V,frechUni.F); 
 totalMesh.DeleteVertex(find(~pointsToUse));
 
@@ -128,9 +128,6 @@ end
 
 triArray = cell(length(Names),1);
 for i = 1:length(Names)
-    if i == 402
-        continue;
-    end
     if i ==frechMean 
         triArray{i} = triangulation(frechUni.F',frechUni.V(1:2,:)');
     else

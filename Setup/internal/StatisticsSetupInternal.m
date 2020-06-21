@@ -10,7 +10,7 @@ path(path, genpath([SAMSPath 'VisualizationScripts']));
 warning('on','MATLAB:rmpath:DirNotFound')
 %% Start off by making directories for each group
 clear k
-metaDir = dir(MetaGroupBasePath);
+metaDir = dir(projectDir);
 SpecimenTypes = {};
 if length(metaDir) == 3
     if exist([MetaGroupBasePath metaDir(3).name '/Groups.mat']) > 0
@@ -22,11 +22,11 @@ if length(metaDir) == 3
     end
 else
     for k = 3:length(metaDir)
-        if isdir([MetaGroupBasePath metaDir(k).name])
-            if exist([MetaGroupBasePath metaDir(k).name '/Groups.mat']) > 0
+        if isdir([projectDir metaDir(k).name])
+            if exist([projectDir metaDir(k).name '/Groups.mat']) > 0
                 SpecimenTypes = [SpecimenTypes metaDir(k).name];
                 if ~exist('keys')
-                    load([MetaGroupBasePath metaDir(k).name '/Groups.mat']);
+                    load([projectDir metaDir(k).name '/Groups.mat']);
                     keys = Groups.keys;
                 end
             end
@@ -35,13 +35,14 @@ else
         end
     end
 end
-statPath = [MetaGroupBasePath 'Statistics/'];
+statPath = [projectDir 'Statistics/'];
 interStatPath = [statPath 'InterGroup/'];
 intraStatPath = [statPath 'IntraGroup/'];
 touch(statPath); touch(interStatPath); touch(intraStatPath);
-
-for k = 1:length(keys)
-    touch([interStatPath keys{k} '/']);
+if exist('keys')
+    for k = 1:length(keys)
+        touch([interStatPath keys{k} '/']);
+    end
 end
 touch([interStatPath 'Total/']);
 

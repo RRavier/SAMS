@@ -2,11 +2,11 @@
 %% Set input and output paths
 
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-dataPath = 'D:\Work\ToothAndClaw\ToothAndClawData\KMeansSampleTeeth\aligned_output\aligned\';
-distancePath = 'D:\Work\ToothAndClaw\ToothAndClawData\KMeansSampleTalus\aligned_output\GPDMat_High.mat';
+dataPath = 'D:\Dropbox\SAMSResults\KMeansSampleTalus_NoDPC\Default\RawOFF\LimitedOFF\';
+distancePath = '';
 
 %Base path for everything in a project, may include multiple groups
-projectDir = 'D://Dropbox/SAMSResults/KMeansSampleTeeth/';
+projectDir = 'D://Dropbox/SAMSResults/KMeansSampleTalus_GroupsOnly/';
 
 %The path of the current group you are working on
 specimenGroup = 'Default';
@@ -26,19 +26,19 @@ numGPLmks = 200;
 %Options are Conf = conformal factor, Gauss = Gaussian curvature, 
 %Mean = absolute mean curvature, DNE = DNE.
 %Gauss recommended to start
-featureMap = 'Gauss';
-
-ForcePutativeMatching = 0;    %Force recomputation of putative matches
+featureMap = 'Conf';
+maxDistTol = 0.18;
+ForcePutativeMatching = 1;    %Force recomputation of putative matches
 maxDepth = 3;           %Maximum number of links in path, keep between 3-5
-maxNbrSize = 3;         %Amount of uncertainty tolerated in pseudolandmark matching
+maxNbrSize = 2;         %Amount of uncertainty tolerated in pseudolandmark matching
                         %Should be an integer at least 1
 
 
 %% Parameters for final landmarking procedure
-maxNumMatches = 10;     %Maximum number of landmarks matches used
+maxNumMatches = 14;     %Maximum number of landmarks matches used
                         %Set based on intuition for number of Type II/III
                         %landmarks usually required for analysis
-minMatchDist = 0.1;     %Minimum distance needed between any landmarks to establish matching
+minMatchDist = 0.12;     %Minimum distance needed between any landmarks to establish matching
                         %Landmarks not added if below this. Set negative if
                         %no error required.
 
@@ -47,7 +47,7 @@ visNumRow = 8;          %When visualizing landmark correspondences,
                         %the number of surfaces to view at once.
 %% Parameters for spherical Hecate only
 numGPLmksHecate = 200;
-featureMapHecate = 'Gauss';
+featureMapHecate = 'Conf';
 numLmksHecate = 15;
 hecateFeatureInds = 10;
 

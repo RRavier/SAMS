@@ -6,7 +6,7 @@ function [matchedLmks,R]=ExtractMatchesPairsOnFly(temp,wtB,wtDecr,initMesh,...
 % propagation. Works by gradual matching, decreasing amount of sureness
 % needed as time goes on in order to capture fuzzier correspondences. Extra
 % means that curvature extrema are added to GP landmarks.
-%
+
 % Input:
 % temp: bandwidth parameter for kernel.
 % wtB: lower bound on minimum weight of path
@@ -122,7 +122,7 @@ end
         neighborhoodList_1 = cell(length(landmarksToTest_1),1);
         neighborhoodList_2 = cell(length(landmarksToTest_2),1);
         adjMat_1 = meshes{initMesh}.A; adjMat_2 = meshes{finalMesh}.A;
-        neighMat_1 = zeros(meshes{initMesh}.nV,meshes{initMesh}.nV); neighMat_2 = zeros(meshes{finalMesh}.nV,meshes{finalMesh}.nV);
+        neighMat_1 = sparse(meshes{initMesh}.nV,meshes{initMesh}.nV); neighMat_2 = sparse(meshes{finalMesh}.nV,meshes{finalMesh}.nV);
         for q = 0:neighborhoodSize
             neighMat_1 = neighMat_1 + adjMat_1^q;
             neighMat_2 = neighMat_2 + adjMat_2^q;

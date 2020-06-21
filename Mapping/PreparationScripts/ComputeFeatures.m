@@ -17,8 +17,6 @@ options.numGPLmks = numGPLmks;
 options.pointCloud = 0;
 
 %% Get meshes and do initial, quick feature computations
-meshList = cell(1,length(Names));
-auxList = cell(1,length(Names));
 
 disp('Loading Meshes...')
 progressbar
@@ -59,7 +57,6 @@ for i = 1:length(Names)
     G.Nv = G.Nv'*diag(1./sqrt(sum((G.Nv').^2,1)));
     G.nF = size(G.F,2);
     G.nV = size(G.V,2);     %needed in case deletion after check
-    meshList{i} = G;
     progressbar(i/length(Names));
 end
 if ~isempty(badMeshes)
@@ -74,19 +71,32 @@ end
 disp('Computing surface features');
 %progressbar
 problemMeshes = zeros(length(Names),1);
-for i = 1:length(Names)
-    disp(i)
+badMeshList = {};
+badMeshInds = [];
+
+%% Loop over meshes to extract features
+for i = 1:length(Names)%1:length(Names)
+    G = Mesh('off',[workingPath 'RawOFF/' Names{i} '.off']);
     %progressbar(i/length(Names));
-        [meshList{i},auxList{i}] = meshList{i}.ComputeAuxiliaryInformation(options);
-
+    try
+        [G,Aux] =G.ComputeAuxiliaryInformation(options);
+        G.Aux = Aux;
+        G.Aux.Name = Names{i};
+        save([output_path Names{i} '.mat'],'G');
+    catch
+        disp(['Error in mesh ' num2str(i)]);
+        badMeshInds = [badMeshInds i];
+        badMeshList = [badMeshList Names{i}];
+    end
 end
 
+%% Repeat computations
+%% Abort if errors exist
+if length(badMeshList) > 0
+    disp('ALERT: The following meshes require manual cleaning to continue')
+    for i = 1:length(badMeshList)
+        disp(badMeshList{i})
+    end
+    error('Terminating, listed surfaces must be cleaned')
+end
 %% Saving
-close all
-disp('Saving')
-for i = 1:length(Names)
-    G = meshList{i};
-    meshList{i}.Aux = auxList{i};
-    meshList{i}.Aux.Name = Names{i};
-    save([output_path Names{i} '.mat'],'G');
-end
