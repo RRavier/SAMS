@@ -20,7 +20,9 @@ VertSampInd = [InitialSamples, zeros(1,SampNumb-ProcessedSampNumb)];
 meshAdj = sparse(pdist2(G.V',G.V').*G.A);
 meshGraph = graph(meshAdj);
 for k=(ProcessedSampNumb+1):SampNumb
-    [~,VertSampInd(k)] = max(min(distances(meshGraph,VertSampInd(1:(k-1)))));
+    size(distances(meshGraph,VertSampInd(1:(k-1))))
+    [~,VertSampInd(k)] = max(max(distances(meshGraph,VertSampInd(1:(k-1)))));
+    
 end
 close all
 
