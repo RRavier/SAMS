@@ -4,6 +4,7 @@ load([workingPath 'MappingData/FeatureMatches.mat']);
 
 
 frechMesh = meshList{frechMean};
+frechMeshGraph = graph(sparse(pdist2(frechMesh.V',frechMesh.V').*frechMesh.A));
 [bd_f,~] = frechMesh.FindOrientedBoundaries;
 progressbar
 for i = 1:length(Names)
@@ -34,8 +35,9 @@ for i = 1:length(Names)
                 break;
             end
             totalDists = zeros(size(possibleMatches,1),1);
-            [D_cur,~,~] = meshList{i}.PerformFastMarching(newMatches(:,1));
-            [D_frech,~,~] = meshList{frechMean}.PerformFastMarching(newMatches(:,2));
+            curMeshGraph = graph(sparse(pdist2(meshList{i}.V',meshList{i}.V').*meshList{i}.A));
+            D_cur = min(distances(curMeshGraph,newMatches(:,1)));
+            D_frech = min(distances(frechMeshGraph,newMatches(:,2)));
             for k = 1:size(possibleMatches,1)
                 totalDists(k)= D_cur(possibleMatches(k,1))+D_frech(possibleMatches(k,2));
             end
