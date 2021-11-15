@@ -9,7 +9,9 @@ for i = 1:length(Names)
 end
 frechMean = find(sum(GPDists.^2)==min(sum(GPDists.^2)));
 matchesPairs = cell(length(Names),1);
-
+distList = triu(GPDists); distList = distList(distList>0);
+pathWtTemp = 0.25*mean(distList);
+startPathWt = exp(-(mean(distList)^2));
 %% Run Matches Pairs Procedure
 if ~isfield(Flags,'RefinementComputed') || ForceRefinement
     disp('Computing Pairwise Matchings for Mesh:');

@@ -18,7 +18,7 @@ function calc_data(SegResult)
 		SegResult.mesh, 'UniformOutput', 0)';
 
 	for i = 1:data.meshN		
-		data.meshArea(i) = surface_area(r.mesh{i}.V, r.mesh{i}.F);
+		data.meshArea(i) = r.mesh{i}.Aux.Area;
         rslt = r.mesh{i}.ariaDNE; data.meshDNE(i) = rslt.dne;
 		data.segmentTotalN(i) = length(r.mesh{i}.segment);
 		data.segmentNonZeroN(i) = ...
@@ -27,7 +27,7 @@ function calc_data(SegResult)
         segDNEArray = zeros(data.segmentTotalN(i),1);
         curIdxs = r.mesh{i}.segmentIdx;
 		for j = 1:data.segmentTotalN(i)
-			segAreaArray(j) = surface_area(r.mesh{i}.segment{j}.V, ...
+			segAreaArray(j) = data.meshArea(i)*surface_area(r.mesh{i}.segment{j}.V, ...
 				r.mesh{i}.segment{j}.F);
             curSegInds = find(curIdxs == j);
             segDNEArray(j) = sum(rslt.localDNE(curSegInds));

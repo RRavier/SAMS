@@ -1,14 +1,9 @@
-%CAUTION: The code may still fully run if the meshes in your collection are
-%not simply connected. This does not mean that the output is good. No
-%guarantees are provided.
+%CAUTION: The following will 
 
-
-%% Initialize and set paths
 initialize;
 MappingSetup;
 disp('Setting Paths');
 
-%% Move data to new directory if not already there.
 disp('Initializing Data Collection')
 if ~exist([workingPath 'Flags.mat'])
     Flags = containers.Map;
@@ -26,9 +21,6 @@ if exist([workingPath 'Names.mat'])
 else
     MoveDataToOutputFolder;
 end
-
-%% Perform quality check of surfaces
-% Code will stop if at least one mesh is not a manifold
 disp('Checking validity of Surfaces');
 if exist([workingPath 'Flags.mat'])
     load([workingPath 'Flags.mat']);
@@ -72,9 +64,7 @@ else
     end
 end
 
-%% Feature computation for registration step
-% Note: errors may come up at this step, unclear why, please report if one
-% is found
+
 disp('Computing Necessary Mesh Features');
 problemMeshes = zeros(length(Names),1);
 if ~isKey(Flags,'FeaturesComputed') || ForceFeatureRecomputation
@@ -85,6 +75,4 @@ if ~isKey(Flags,'FeaturesComputed') || ForceFeatureRecomputation
 end
 Flags('FeaturesComputed') = 1;
 save([workingPath 'Flags.mat'],'Flags');
-
-%% Code successful
 disp('Finished preparing meshes, you may begin mapping now');

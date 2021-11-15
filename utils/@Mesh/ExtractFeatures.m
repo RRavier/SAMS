@@ -19,7 +19,7 @@ Display = getoptions(options,'Display','off');
 [~,~,Cmin,Cmax,Cmean,Cgauss,~] = GM.ComputeCurvature(options);
 %Conf = GM.Aux.Conf;
 [~,TriAreas] = GM.ComputeSurfaceArea;
-GM.Aux.VertArea = 
+GM.Aux.VertArea = (TriAreas'*G.F2V)/3;
 for j=1:SmoothCurvatureFields
     WeightMatrix = repmat(TriAreas,1,GM.nV).*GM.F2V.*repmat(1./GM.Aux.VertArea,GM.nF,1);
     

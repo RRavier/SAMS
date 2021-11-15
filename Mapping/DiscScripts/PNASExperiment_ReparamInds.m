@@ -18,7 +18,7 @@ for i = 1:length(Names)
     load([samplesPath Names{i} '.mat']);
     meshList{i} = G;
 end
-
+meshList = meshList;
 
 TextureCoords1 = cell(length(Names),1);
 TextureCoords2 = cell(length(Names),1);
@@ -116,7 +116,8 @@ end
 %remaining after deletion. Remove those
 totalMesh = Mesh('VF',frechUni.V,frechUni.F); 
 totalAdj = totalMesh.A;
-
+load([workingPath 'newLmkInds.mat']);
+frechLmks = newLmkInds{frechMean};
 nullFlag = 1;
 while nullFlag
     nullFlag = 0;
@@ -130,10 +131,21 @@ while nullFlag
         end
     end
 end
-   
+
+
+lmksToIgnore = find(ismember(frechLmks,find(~pointsToUse)));
+disp(['Ignoring ' num2str(length(lmksToIgnore)) ' landmarks']);
+disp(lmksToIgnore);
+frechLmks(lmksToIgnore) = [];
+curFrechLmks = totalMesh.V(:,frechLmks)';
 totalMesh.DeleteVertex(find(~pointsToUse));
-totalMesh.DeleteIsolatedVertex;
-%totalMesh.Centralize;
+for i = 1:length(newLmkInds)
+    newLmkInds{i}(lmksToIgnore) = [];
+end
+%curFrechLmks(lmksToIgnore,:) = [];
+reparamFrechLmks = knnsearch(totalMesh.V',curFrechLmks);
+
+
 [~,triAreas] = totalMesh.ComputeSurfaceArea;
 totalMesh.Aux.VertArea = (triAreas'*totalMesh.F2V)/3;
 %Use new base parametrized meshList to make brand new parametrizations.
@@ -142,7 +154,6 @@ newMeshVerts = cell(length(Names),1);
 for i = 1:length(Names)
     newMeshVerts{i} = zeros(3,size(totalMesh.V,2));
 end
-
 triArray = cell(length(Names),1);
 for i = 1:length(Names)
     if i ==frechMean 
@@ -197,32 +208,10 @@ for k = 1:length(nanVerts)
 end
 
 disp('Creating reparametrized meshes...')
-newMeshList= cell(length(Names),1);
+unscaledReparamMeshList= cell(length(Names),1);
+save([workingPath 'reparamFrechLmks.mat'],'reparamFrechLmks');
 for i = 1:length(Names)
-    newMeshList{i} = Mesh('VF',newMeshVerts{i},totalMesh.F);
-    newMeshList{i}.Aux.Area = meshList{i}.Aux.Area*newMeshList{i}.ComputeSurfaceArea;
-    newMeshList{i}.Centralize('ScaleArea');
-    newMeshList{i}.Aux.Name = meshList{i}.Aux.Name;
-    [~,TriAreas] = newMeshList{i}.ComputeSurfaceArea;
-    newMeshList{i}.Aux.VertArea = (TriAreas'*newMeshList{i}.F2V)/3;
+    unscaledReparamMeshList{i} = Mesh('VF',newMeshVerts{i},totalMesh.F);
 end
 
-%% Renormalize and compute distances based on new alignment
-save([workingPath 'newMeshList.mat'],'newMeshList');
-% Link = linkprop(h, {'CameraUpVector', 'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
-% setappdata(gcf, 'StoreTheLink', Link);
-
-dists = zeros(length(Names),length(Names));
-
-%% Computing distances and embeddings
-disp('Computing distances and embedding')
-for i = 1:length(Names)
-    for j = 1:length(Names)
-        dists(i,j) = 0.5*sqrt((sum(newMeshList{i}.V-newMeshList{j}.V).^2)*...
-            (newMeshList{i}.Aux.VertArea'+newMeshList{j}.Aux.VertArea'));
-    end
-end
-
-[Y,~] = mdscale(dists,3,'Criterion','strain');
-save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
-
+save([workingPath 'unscaledReparamMeshList.mat'],'unscaledReparamMeshList');

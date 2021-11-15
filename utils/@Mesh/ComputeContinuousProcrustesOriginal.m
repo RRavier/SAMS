@@ -1,4 +1,4 @@
-function [rslt] = ComputeContinuousProcrustesStable(GM,GN,options)
+function [rslt] = ComputeContinuousProcrustesOriginal(GM,GN,options)
 %COMPUTECONTINUOUSPROCRUSTES: Compute cP distance between GM and GN. Output
 %contians
 %   rslt.Gname1:            name of the first mesh
@@ -203,7 +203,7 @@ cPmap = knnsearch(TextureCoords2', TextureCoords1');
 %%% match features in Euclidean space
 %options.TextureCoords2_kdtree = TextureCoords2_kdtree;
 if strcmpi(FeatureMatchType,'TPS')
-    [TextureCoords1,cPmap] = TPSDeformationStable(GM,GN,cPmap,'ConfMax',[real(pushGM);imag(pushGM)],TextureCoords2,options);
+    [TextureCoords1,cPmap] = TPSDeformation(GM,GN,cPmap,'ConfMax',[real(pushGM);imag(pushGM)],TextureCoords2,options);
 elseif strcmpi(FeatureMatchType,'Laplacian')
     [TextureCoords1,cPmap] = LaplacianDeformation(GM,GN,cPmap,'ConfMax',[real(pushGM);imag(pushGM)],TextureCoords2,options);
 elseif strcmpi(FeatureMatchType,'BaryCentric')

@@ -11,7 +11,7 @@ CreateDiffusionMatrixVertex;
 
 cfg.dirCollate = dirCollate;
 cfg.colorSegments = colorSegments;
-
+cfg.numMeshDisplay=1;
 
 for numEigs = numEigsVec
     EigenDecomp;

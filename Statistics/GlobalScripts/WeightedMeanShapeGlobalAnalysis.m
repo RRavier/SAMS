@@ -3,7 +3,7 @@
 %% Load meshes and normalize
 meshCollection = cell(1,length(SpecimenTypes));
 for i = 1:length(SpecimenTypes)
-    load([MetaGroupBasePath SpecimenTypes{i} '/newMeshList.mat']);
+    load([projectDir SpecimenTypes{i} '/newMeshList.mat']);
     for j = 1:length(newMeshList)
         newMeshList{j}.V = newMeshList{j}.V - ...
             repmat(mean(newMeshList{j}.V')',1,newMeshList{j}.nV);
@@ -18,7 +18,7 @@ for k = 1:length(keys)
     totalUnLabels = {};
     for i = 1:length(SpecimenTypes)
         curMeshes = meshCollection{i};
-        load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+        load([projectDir SpecimenTypes{i} '/Groups.mat']);
         totalLabels{k,i} = lower(Groups(currentKey));
         curLabels = totalLabels{k,i};
         totalUnLabels = unique([totalUnLabels;unique(totalLabels{k,i})]);

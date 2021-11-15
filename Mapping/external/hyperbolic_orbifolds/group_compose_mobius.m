@@ -19,7 +19,9 @@ end
 comp(:,4)=ones(size(comp,1),1);
 tol=1e-8;
 temp_comp=[real(comp) imag(comp)];
-temp_comp = builtin('_mergesimpts',temp_comp,[tol tol tol tol tol tol tol tol],'first');
+
+temp_comp=uniquetol(temp_comp,tol,'ByRows',true);
+%temp_comp = builtin('_mergesimpts',temp_comp,[tol tol tol tol tol tol tol tol],'first');
 comp=temp_comp(:,1:4)+1i*temp_comp(:,5:8);
 Ms=M;
 for i=1:size(comp,1)

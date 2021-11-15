@@ -36,8 +36,13 @@ for i = 1:length(Names)
             end
             totalDists = zeros(size(possibleMatches,1),1);
             curMeshGraph = graph(sparse(pdist2(meshList{i}.V',meshList{i}.V').*meshList{i}.A));
-            D_cur = min(distances(curMeshGraph,newMatches(:,1)));
-            D_frech = min(distances(frechMeshGraph,newMatches(:,2)));
+            if numMatches > 1
+                D_cur = min(distances(curMeshGraph,newMatches(:,1)));
+                D_frech = min(distances(frechMeshGraph,newMatches(:,2)));
+            else
+                D_cur = distances(curMeshGraph,newMatches(:,1));
+                D_frech = distances(frechMeshGraph,newMatches(:,2));
+            end
             for k = 1:size(possibleMatches,1)
                 totalDists(k)= D_cur(possibleMatches(k,1))+D_frech(possibleMatches(k,2));
             end

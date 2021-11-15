@@ -4,7 +4,7 @@
 MDSCollection = cell(1,length(SpecimenTypes));
 MeanCoord = cell(1,length(SpecimenTypes));
 for i = 1:length(SpecimenTypes)
-    load([MetaGroupBasePath SpecimenTypes{i} '/MDSEmbedding.mat']);
+    load([projectDir SpecimenTypes{i} '/MDSEmbedding.mat']);
     MDSCollection{i} = Y;
 end
 %% Compute means for each possible type of key label combination
@@ -14,7 +14,7 @@ for k = 1:length(keys)
     totalUnLabels = {};
     for i = 1:length(SpecimenTypes)
         curMDS = MDSCollection{i};
-        load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+        load([projectDir SpecimenTypes{i} '/Groups.mat']);
         totalLabels{k,i} = lower(Groups(currentKey));
         curLabels = totalLabels{k,i};
         totalUnLabels = unique([totalUnLabels;unique(totalLabels{k,i})]);

@@ -88,6 +88,6 @@ else
 end
 touch([workingPath '/MDS/' figName]);
 figDir = [workingPath '/MDS/' figName];
-savefig([figDir 'MDS.fig']);
-saveas(gcf,[figDir 'MDS.png']);
+savefig([figDir 'MDS_Normal.fig']);
+saveas(gcf,[figDir 'MDS_Normal.png']);
 end

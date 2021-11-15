@@ -48,7 +48,7 @@ if size(F{1},1)~=1
     F = cellfun( @(x) x', F, 'UniformOutput', 0);
 end
 
-for i=minmax_face_size(1):minmax_face_size(2)
+for i=minmax_face_size(1)
         h(i) = patch('Vertices', V', 'Faces', cell2mat(F(face_size==i)),'FaceColor','interp',...
         'FaceVertexCData',repmat([.9 .9 .8],size(V,2),1),'CDataMapping','scaled',...
         'FaceLighting','flat','CDataMapping','direct', ...
@@ -58,7 +58,7 @@ for i=minmax_face_size(1):minmax_face_size(2)
     %material shiny
     set(gca, 'CameraUpVector',  [-0.2666,-0.9468, 0.1804]);
         set(gca, 'CameraPosition',  [ 5.4366,-1.4825, 0.2070]);
-        set(gca, 'CameraTarget',    [ 0.0059, 0.0039,-0.0166]);
+        %set(gca, 'CameraTarget',    [ 0.0059, 0.0039,-0.0166]);
         set(gca, 'CameraViewAngle', 10.0659);
         camlight('headlight');
         camlight(180,0);

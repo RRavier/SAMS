@@ -4,7 +4,7 @@
 MDSCollection = cell(1,length(SpecimenTypes));
 MeanCoord = cell(1,length(SpecimenTypes));
 for i = 1:length(SpecimenTypes)
-    load([MetaGroupBasePath SpecimenTypes{i} '/MDSEmbedding.mat']);
+    load([projectDir SpecimenTypes{i} '/MDSEmbedding.mat']);
     MDSCollection{i} = Y;
 end
 
@@ -82,7 +82,7 @@ for k = 1:length(keys)
     currentKey = keys{k};
     totalUnLabels = {};
     for i = 1:length(SpecimenTypes)
-        load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+        load([projectDir SpecimenTypes{i} '/Groups.mat']);
         totalLabels{k,i} = lower(Groups(currentKey));
         totalUnLabels = unique([totalUnLabels;unique(totalLabels{k,i})]);
     end
@@ -167,7 +167,7 @@ end
 %% Intragroup analysis: loop over SpecimenTypes
 for i = 1:length(SpecimenTypes)
     curMDS = MDSCollection{i};
-    load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+    load([projectDir SpecimenTypes{i} '/Groups.mat']);
     totalUnLabels = {};
     
     quadDict = {}; absDict = {}; quadP = []; absP = [];

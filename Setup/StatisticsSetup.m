@@ -2,7 +2,7 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-projectDir = 'D://Dropbox/SAMSResults/KMeansSampleTeeth_GroupsOnly/';
+projectDir = 'C:\Users\rober\Dropbox\SAMSResults\Hamates_IJCV\';
 
 
 %The list of groups for project
@@ -13,14 +13,14 @@ specimenGroup = 'Default';
 %Path of Excel file containing taxa information. Leave empty if none. 
 %PLEASE FOLLOW PRESCRIBED FORMATTING OR YOU WILL HAVE TO MANUALLY EDIT CODE
 
-spreadsheetPath = 'D://Dropbox/SAMSResults/KMeansSampleTalus_GroupsOnly/taxa_code.xlsx';
+spreadsheetPath = 'C:\Users\rober\Dropbox\SAMSResults/Hamates_IJCV/taxa_code.xlsx';
 
-groupsToCompare = {'GroupsToCompare'};
+groupsToCompare = {'GroupsToCompare','NewSubGroups'};
 
 numLmks = 30;
 
-isoRadius = 8;
-anisoRadius = 5;
+isoRadius = 11;
+anisoRadius = 11;
 %% Local Statistical Analysis Parameters
 
 %Array of p-values to plot significance maps for
@@ -55,8 +55,8 @@ baseEps = 0.3;
 fiberEps = 1e-3;
 fiberEpsVerts = 0.1986;       %For vertex based softmaps
 BNN = 5;
-numEigsVec = 15;
-numSegmentsVec = 2:12;
+numEigsVec = [5 10];
+numSegmentsVec = 6:2:12;
 kMeansMaxIter = 5000;
 
 %% Hecate Output Formatting

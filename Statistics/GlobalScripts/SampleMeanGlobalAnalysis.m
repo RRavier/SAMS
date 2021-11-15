@@ -3,7 +3,7 @@
 %% Load meshes and normalize, then compute distances
 meshCollection = cell(1,length(SpecimenTypes));
 for i = 1:length(SpecimenTypes)
-    load([MetaGroupBasePath SpecimenTypes{i} '/newMeshList.mat']);
+    load([projectDir SpecimenTypes{i} '/newMeshList.mat']);
 
     for j = 1:length(newMeshList)
         newMeshList{j}.V = newMeshList{j}.V - ...
@@ -93,7 +93,7 @@ for k = 1:length(keys)
     currentKey = keys{k};
     totalUnLabels = {};
     for i = 1:length(SpecimenTypes)
-        load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+        load([projectDir SpecimenTypes{i} '/Groups.mat']);
         totalLabels{k,i} = lower(Groups(currentKey));
         totalUnLabels = unique([totalUnLabels;unique(totalLabels{k,i})]);
     end
@@ -187,7 +187,7 @@ end
 
 %% Intragroup analysis: loop over SpecimenTypes
 for i = 1:length(SpecimenTypes)
-    load([MetaGroupBasePath SpecimenTypes{i} '/Groups.mat']);
+    load([projectDir SpecimenTypes{i} '/Groups.mat']);
     totalUnLabels = {};
     
     quadDict = {}; absDict = {}; quadP = []; absP = [];

@@ -28,10 +28,10 @@ for i = 1:length(Names)
     while true
         delInds = [];
         if max(abs(imag(TriAreas))) > 0
-            delInds = [delInds find(abs(imag(TriAreas))>0)];
+            delInds = [delInds;find(abs(imag(TriAreas))>0)];
         end
         if min(TriAreas)<nullFaceBound
-            delInds = [delInds find(TriAreas < 1e-10)];
+            delInds = [delInds;find(TriAreas < 1e-10)];
         end
         if isempty(delInds)
             break;
@@ -52,8 +52,8 @@ for i = 1:length(Names)
 
     G.Write([workingPath 'RawOFF/' Names{i} '.off'],'off',options);
     save([workingPath 'RawMAT/' Names{i} '.mat'],'G');
-    G.Nf = G.ComputeFaceNormals;
-    G.Nv = G.F2V'*G.Nf';
+    G.Nf = G.ComputeFaceNormals; %Normal at a face
+    G.Nv = G.F2V'*G.Nf';         %Defining normal vector at a vertex
     G.Nv = G.Nv'*diag(1./sqrt(sum((G.Nv').^2,1)));
     G.nF = size(G.F,2);
     G.nV = size(G.V,2);     %needed in case deletion after check

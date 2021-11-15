@@ -98,23 +98,31 @@ for i = 1:length(Names)
         curMeshVerts = curMeshes{i}.V';
         newMeshVerts = barCoordsList{i}*curMeshVerts;
         newMeshList{i} = Mesh('VF',newMeshVerts',meshList{frechMean}.F);
+        newMeshList{i}.Aux.Area = curMeshes{i}.Aux.Area;
+        newMeshList{i}.Centralize('ScaleArea');
+        [~,TriAreas] = newMeshList{i}.ComputeSurfaceArea;
+        newMeshList{i}.Aux.VertArea = (TriAreas'*newMeshList{i}.F2V)/3;
+        newMeshList{i}.Aux.Name = curMeshes{i}.Aux.Name;
     else
         newMeshList{i} = meshList{i};
+        newMeshList{i}.Aux.Area = curMeshes{i}.Aux.Area;
+        newMeshList{i}.Centralize('ScaleArea');
+        [~,TriAreas] = newMeshList{i}.ComputeSurfaceArea;
+        newMeshList{i}.Aux.VertArea = (TriAreas'*newMeshList{i}.F2V)/3;
+        newMeshList{i}.Aux.Name = curMeshes{i}.Aux.Name;
     end
 end
-for i = 1:length(newMeshList)
-    newMeshList{i}.V = newMeshList{i}.V-mean(newMeshList{i}.V')';
-    newMeshList{i}.V = newMeshList{i}.V/norm(newMeshList{i}.V,'fro');
-end
+
 save([workingPath 'newMeshList.mat'],'newMeshList');
 %save('barCoordsList.mat','barCoordsList');
 %save('mapList.mat','mapList');
 dists = zeros(length(Names),length(Names));
 
-
+%%
 for i = 1:length(Names)
     for j = 1:length(Names)
-        dists(i,j) = norm(newMeshList{i}.V - newMeshList{j}.V,'fro');
+        dists(i,j) = 0.5*sqrt((sum(newMeshList{i}.V-newMeshList{j}.V).^2)*...
+            ((newMeshList{i}.Aux.VertArea+newMeshList{j}.Aux.VertArea))');
     end
 end
 [Y,~] = mdscale(dists,3);

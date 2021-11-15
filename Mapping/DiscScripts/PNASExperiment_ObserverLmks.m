@@ -27,12 +27,13 @@ TextureCoordsRev2 = cell(length(Names),1);
 maps = cell(length(Names),1);
 translation = cell(length(Names),1);
 
+
 %% Compute registrations
 disp('Computing registrations');
 
 frechUni = Mesh('VF',meshList{frechMean}.Aux.IsoUniV(1:2,:),meshList{frechMean}.F);
     
-
+load([workingPath 'newLmkInds.mat']);
 progressbar
 for i = 1:length(Names)
     disp(['Mesh ' num2str(i) ' out of ' num2str(length(Names))]);
@@ -45,7 +46,7 @@ for i = 1:length(Names)
         continue;
     end
     curUni = Mesh('VF',meshList{i}.Aux.IsoUniV(1:2,:),meshList{i}.F);
-    curPairs = matchesPairs{i};
+    curPairs = [newLmkInds{i} newLmkInds{frechMean}];
    
 
     % global alignment -- apply global rigid tranformation to {1} based on correspondences
@@ -132,7 +133,7 @@ while nullFlag
 end
    
 totalMesh.DeleteVertex(find(~pointsToUse));
-totalMesh.DeleteIsolatedVertex;
+
 %totalMesh.Centralize;
 [~,triAreas] = totalMesh.ComputeSurfaceArea;
 totalMesh.Aux.VertArea = (triAreas'*totalMesh.F2V)/3;
@@ -208,7 +209,7 @@ for i = 1:length(Names)
 end
 
 %% Renormalize and compute distances based on new alignment
-save([workingPath 'newMeshList.mat'],'newMeshList');
+save([workingPath 'newMeshList_ObserverLmks.mat'],'newMeshList');
 % Link = linkprop(h, {'CameraUpVector', 'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
 % setappdata(gcf, 'StoreTheLink', Link);
 
@@ -224,5 +225,5 @@ for i = 1:length(Names)
 end
 
 [Y,~] = mdscale(dists,3,'Criterion','strain');
-save([workingPath 'FinalDists.mat'],'dists'); save([workingPath 'MDSEmbedding.mat'],'Y');
+save([workingPath 'FinalDists_ObserverLmks.mat'],'dists'); save([workingPath 'MDSEmbedding_ObserverLmks.mat'],'Y');
 

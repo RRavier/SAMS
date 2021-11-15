@@ -2,16 +2,16 @@
 
 %% Set paths and organization of output, probably same as in MappingSetup
 %Base path for everything in a project, may include multiple groups
-projectDir = 'D://Dropbox/SAMSResults/Dissertation_Teeth/';
+projectDir = 'D:\Dropbox\SAMSResults\USDAPrime\';
 specimenGroup = 'Default';
 
                         
 %% HDM/Hecate Settings
 BNN = 5;                    %Number of nearest neighbors on base manifold
-numEigsVec = 15;            %Number of eigenvectors to use in decompositions
+numEigsVec = 5:5:10;            %Number of eigenvectors to use in decompositions
                             %Highly variable data should use approximately
                             %5-10.
-numSegmentsVec = 2:12;      %Vector of number of segments to consider
+numSegmentsVec = 8:12;      %Vector of number of segments to consider
 kMeansMaxIter = 5000;       %Number of iterations allowed for optimization to converge
 
 %% Hecate Output Formatting

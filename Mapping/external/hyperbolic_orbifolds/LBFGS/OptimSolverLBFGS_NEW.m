@@ -139,6 +139,7 @@ classdef OptimSolverLBFGS_NEW < handle
 
             % line search
             obj.t = 1;
+            
             if obj.useLineSearch
                 [linesearch_cond_lhs, linesearch_cond_rhs] = computeLineSearchCond;
                 while linesearch_cond_lhs>linesearch_cond_rhs
@@ -167,6 +168,7 @@ classdef OptimSolverLBFGS_NEW < handle
             obj.rao_k(:,1) = 1/(obj.y_k(:,1)'*obj.s_k(:,1));
                        
             function [linesearch_cond_lhs, linesearch_cond_rhs] = computeLineSearchCond
+                
                 linesearch_cond_lhs = obj.funEvaluateValue(obj.x + obj.t*obj.p);
                 linesearch_cond_rhs = obj.x_f + obj.ls_alpha*obj.t*obj.x_fgrad'*obj.p;
             end

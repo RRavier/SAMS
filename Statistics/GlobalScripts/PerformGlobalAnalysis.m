@@ -9,11 +9,11 @@ SampleMeanGlobalAnalysis;
 WeightedMeanShapeGlobalAnalysis;
 disp('Performing global analysis on Frechet mean');
 SampleFrechetMeanGlobalAnalysis;
-WeightedFrechetMeanGlobalAnalysis
+WeightedFrechetMeanGlobalAnalysis;
 
 disp('Writing all MDS Diagrams');
 for i = 1:length(SpecimenTypes)
-    curDir = [MetaGroupBasePath SpecimenTypes{i} '/'];
+    curDir = [projectDir SpecimenTypes{i} '/'];
     PlotMDS(curDir,0); PlotMDS(curDir,1);
 end
 close all

@@ -51,7 +51,7 @@ switch format
 
         % write the points & faces
         if ~isempty(options.color)
-            c = repmat(options.color(:,1), [1, length(G.V) ]) * 255;
+            c = round(repmat(options.color(:,1), [1, length(G.V) ]) * 255);
             vc = vertcat(G.V, c);
             fprintf(fid, '%f %f %f %d %d %d %d\n', vc);
         else

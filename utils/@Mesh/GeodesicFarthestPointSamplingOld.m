@@ -1,5 +1,6 @@
 function [VertSampInd] = GeodesicFarthestPointSampling(G,SampNumb,InitialSamples)
-% Geodesic farthest point sampling
+%FARTHESTPOINTSAMPLING Summary of this function goes here
+%   Detailed explanation goes here
 
 if nargin<2
     SampNumb = G.nV;
@@ -15,16 +16,10 @@ end
 
 ProcessedSampNumb = length(InitialSamples);
 VertSampInd = [InitialSamples, zeros(1,SampNumb-ProcessedSampNumb)];
-
-%% Altered script to not use fast marching
-meshAdj = sparse(pdist2(G.V',G.V').*G.A);
-meshGraph = graph(meshAdj);
 for k=(ProcessedSampNumb+1):SampNumb
-    size(distances(meshGraph,VertSampInd(1:(k-1))))
-    [~,VertSampInd(k)] = max(max(distances(meshGraph,VertSampInd(1:(k-1)))));
-    
+    progressbar(k,SampNumb,20);
+    [~,VertSampInd(k)] = max(G.PerformFastMarching(VertSampInd(1:(k-1))));
 end
-close all
 
 end
 

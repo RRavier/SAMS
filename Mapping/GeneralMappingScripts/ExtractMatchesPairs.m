@@ -1,6 +1,6 @@
 function [matchedLmks,R]=ExtractMatchesPairs(temp,wtB,wtDecr,initMesh,...
     finalMesh,landmarks,neighborhoodSize,percDecr,minPerc,workingPath,...
-    isDisc)
+    maxDepth)
 
 % Script for computing the set of matched landmarks based off of forward
 % propagation. Works by gradual matching, decreasing amount of sureness
@@ -92,8 +92,8 @@ for i = 1:size(weightedFlows_12,1)
 end
 %% Run diffusion to gather points and distributions
 while true
-    DepthFirstSearchPlotting_12(weightedFlows_12,initMesh,finalMesh,landmarksToTest_1,cPMap,1,wtB,1,initMesh);
-    DepthFirstSearchPlotting_21(weightedFlows_21,finalMesh,initMesh,landmarksToTest_2,cPMap,1,wtB,1,finalMesh);
+        DepthFirstSearchPlotting_12(weightedFlows_12,initMesh,finalMesh,landmarksToTest_1,1,wtB,1,initMesh,maxDepth);
+    DepthFirstSearchPlotting_21(weightedFlows_21,finalMesh,initMesh,landmarksToTest_2,1,wtB,1,finalMesh,maxDepth);
     if norm(vertWeight_12)>0 && norm(vertWeight_21) > 0
         break;
     else %reset and redo computation with smaller weight
@@ -320,18 +320,23 @@ for q = 1:landmarks
 end
 
 end
-function DepthFirstSearchPlotting_12(weightedFlows,init,final,lmks,mapMatrix,weight,wtBnd,curDepth,curPath)
+function DepthFirstSearchPlotting_12(weightedFlows,init,final,lmks,weight,wtBnd,curDepth,curPath,maxDepth)
 %global uniV2 convexComb totalWeight continueCounter
+global meshes
 global vertWeight_12
 global numLandmarks
     nextVerts = find(weightedFlows(init,:));
+    
     for i = 1:length(nextVerts)
-        mapMatrix
-        nextLmks = mapMatrix{init,nextVerts(i)}(lmks);
+        if (curDepth == maxDepth) && (nextVerts(i) ~= final)
+            continue;
+        end
+        nextLmks = knnsearch(meshes{nextVerts(i)}.V',meshes{init}.V(:,lmks)');
         nextWeight = weight*weightedFlows(init,nextVerts(i));
         if (nextWeight < wtBnd) 
             continue;
         end
+        
         nextPath = [curPath nextVerts(i)];
         if nextVerts(i) == final
 
@@ -339,23 +344,24 @@ global numLandmarks
             for k = 1:numLandmarks
                 vertWeight_12(k,nextLmks(k)) = vertWeight_12(k,nextLmks(k)) + nextWeight;
             end
-        else
-           
-            DepthFirstSearchPlotting_12(weightedFlows,nextVerts(i),final,nextLmks,mapMatrix,nextWeight,wtBnd,curDepth+1,nextPath);
+        elseif curDepth < maxDepth
+            DepthFirstSearchPlotting_12(weightedFlows,nextVerts(i),final,nextLmks,nextWeight,wtBnd,curDepth+1,nextPath,maxDepth);
         end
     end
             
 end
 
-function DepthFirstSearchPlotting_21(weightedFlows,init,final,lmks,mapMatrix,weight,wtBnd,curDepth,curPath)
+function DepthFirstSearchPlotting_21(weightedFlows,init,final,lmks,weight,wtBnd,curDepth,curPath,maxDepth)
 %global uniV2 convexComb totalWeight continueCounter
+global meshes
 global vertWeight_21
 global numLandmarks
     nextVerts = find(weightedFlows(init,:));
     for i = 1:length(nextVerts)
-        max(lmks)
-        size(nextLmks)
-        nextLmks = mapMatrix{init,nextVerts(i)}(lmks);
+        if (curDepth == maxDepth) && (nextVerts(i) ~= final)
+            continue;
+        end
+        nextLmks = knnsearch(meshes{nextVerts(i)}.V',meshes{init}.V(:,lmks)');
         nextWeight = weight*weightedFlows(init,nextVerts(i));
         if (nextWeight < wtBnd) 
             continue;
@@ -366,8 +372,8 @@ global numLandmarks
             for k = 1:numLandmarks
                 vertWeight_21(k,nextLmks(k)) = vertWeight_21(k,nextLmks(k)) + nextWeight;
             end
-        else
-            DepthFirstSearchPlotting_21(weightedFlows,nextVerts(i),final,nextLmks,mapMatrix,nextWeight,wtBnd,curDepth+1,nextPath);
+        elseif curDepth < maxDepth
+            DepthFirstSearchPlotting_21(weightedFlows,nextVerts(i),final,nextLmks,nextWeight,wtBnd,curDepth+1,nextPath,maxDepth);
         end
     end
             

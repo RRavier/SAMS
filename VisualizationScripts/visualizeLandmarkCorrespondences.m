@@ -30,7 +30,10 @@ for i = 1:numChunk
             curV(3,visMatchesPairs{j}(:,1)),100,curCube,'filled');
         
         h(2,j-startInd+1) = subplot(2,visNumRow,j-startInd+1+visNumRow);
-        
+        frechMesh.draw; hold on;
+        curV = frechMesh.V;
+        scatter3(curV(1,visMatchesPairs{j}(:,2)),curV(2,visMatchesPairs{j}(:,2)),...
+            curV(3,visMatchesPairs{j}(:,2)),100,curCube,'filled');
     end
     h = reshape(h,visNumRow*2,1);
     Link = linkprop(h, {'CameraUpVector', 'CameraPosition', 'CameraTarget', 'CameraViewAngle'});

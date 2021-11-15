@@ -4,7 +4,7 @@
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
 dataPath = 'C:\Users\rober\Dropbox\TeethData\AnkleWrist\Wrists\NewMeshes\';
 
-distancePath = '';  %Path of precomputed distances. Not necessary, but may be helpful
+distancePath = '';  %Path of 
 
 %Base path for everything in a project, may include multiple groups of
 %nonhomolgous surfaces
@@ -28,19 +28,19 @@ numGPLmks = 200;
 %Geometric features used to extract initial matches.
 %Options are Conf = conformal factor, Gauss = Gaussian curvature, 
 %Mean = absolute mean curvature, DNE = DNE.
-%Gauss recommended to start, followed by Conf, DNE, Mean
+%Gauss recommended to start
 featureMap = 'Gauss';
+maxDistTol = 0.18;
 ForcePutativeMatching = 1;    %Force recomputation of putative matches
-maxDepth = 3;           %Maximum number of links in path, keep between 3-5 for fast computations
+maxDepth = 3;           %Maximum number of links in path, keep between 3-5
 maxNbrSize = 2;         %Amount of uncertainty tolerated in pseudolandmark matching
-                        %Should be an integer between 1-3.
+                        %Should be an integer at least 1
 
 
 %% Parameters for final landmarking procedure
 maxNumMatches = 12;     %Maximum number of landmarks matches used
                         %Set based on intuition for number of Type II/III
-                        %landmarks usually required for analysis. Should be
-                        %based on surface complexity.
+                        %landmarks usually required for analysis
 minMatchDist = 0.18;     %Minimum distance needed between any landmarks to establish matching
                         %Landmarks not added if below this. Set negative if
                         %no error required.
@@ -64,7 +64,7 @@ GaussMaxLocalWidth = 10;            %Gauss curvature maxima radius
 MeanMinLocalWidth = 8;              %Absolute mean curvature minima radius
 DNEMaxLocalWidth = 8;               %DNE v1 maxima radius
 
-%Putative Matching Parameters, 
+%Putative Matching Parameters
 minPerc = 0.5;          %Minimum relative likelihood needed to establish match.
                         %Set between 0.5 and 1
 percDecr = 0.05;        %Decrement parameter for lowering required relative likelihood
@@ -73,7 +73,6 @@ percDecr = 0.05;        %Decrement parameter for lowering required relative like
 pathWtDecr = .995;      %Decrement minimum weight of path considered
                         %Set between 0 and 1, numbers closer to one result
                         %in slower, higher precision computation
-maxDistTol = 0.18;      %Possibly deprecated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 MappingSetupInternal;
