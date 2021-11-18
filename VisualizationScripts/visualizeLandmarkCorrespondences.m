@@ -35,7 +35,7 @@ for i = 1:numChunk
         scatter3(curV(1,visMatchesPairs{j}(:,2)),curV(2,visMatchesPairs{j}(:,2)),...
             curV(3,visMatchesPairs{j}(:,2)),100,curCube,'filled');
     end
-    h = reshape(h,visNumRow*2,1);
+    h = reshape(h,length(h(:)),1);
     Link = linkprop(h, {'CameraUpVector', 'CameraPosition', 'CameraTarget', 'CameraViewAngle'});
     setappdata(gcf, 'StoreTheLink', Link);
     pause()
