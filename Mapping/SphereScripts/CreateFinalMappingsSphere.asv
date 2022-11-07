@@ -112,8 +112,7 @@ for i = 1:length(Names)
             newMeshList{i}.Aux.VertArea = (TriAreas'*newMeshList{i}.F2V)/3;
             newMeshList{i}.Aux.Name = curMeshes{i}.Aux.Name;
         catch
-            badMeshList = [badMeshList i];
-        end
+            
     else
         newMeshList{i} = meshList{i};
         newMeshList{i}.Aux.Area = curMeshes{i}.Aux.Area;
@@ -124,12 +123,7 @@ for i = 1:length(Names)
     end
 end
 
-if ~isempty(badMeshList)
-    Names(unique(badMeshList)) = [];
-end
-
 save([workingPath 'newMeshList.mat'],'newMeshList');
-save([workingPath 'newMeshListNames.mat'],'Names');
 %save('barCoordsList.mat','barCoordsList');
 %save('mapList.mat','mapList');
 dists = zeros(length(Names),length(Names));

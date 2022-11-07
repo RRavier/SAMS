@@ -351,6 +351,7 @@ global numLandmarks
         if (curDepth == maxDepth) && (nextVerts(i) ~= final)
             continue;
         end
+        
         nextLmks = knnsearch(meshes{nextVerts(i)}.V',meshes{init}.V(:,lmks)');
         nextWeight = weight*weightedFlows(init,nextVerts(i));
         if (nextWeight < wtBnd) 
@@ -358,6 +359,7 @@ global numLandmarks
         end
         nextPath = [curPath nextVerts(i)];
         if nextVerts(i) == final
+            nextPath
             %scatter3(meshes{final}.V(1,nextLmks),meshes{final}.V(2,nextLmks),meshes{final}.V(3,nextLmks),40,repmat([1 1-(nextWeight-wtBnd)/(1-wtBnd) 1-(nextWeight-wtBnd)/(1-wtBnd)],length(nextLmks),1),'filled');
             for k = 1:numLandmarks
                 vertWeight_21(k,nextLmks(k)) = vertWeight_21(k,nextLmks(k)) + nextWeight;

@@ -36,8 +36,6 @@ save([workingPath 'RawNames.mat'],'Names');
 
 %This only works with Auto3dgm of old and should be deprecated
 
-disp('NOTE: Loading prior distance matrix currently deprecated');
-disp('Previous distances will not be used in final computations');
 %if isfile(distancePath)
 %    S = load(distancePath);
 %    distName = fieldnames(S);
@@ -46,7 +44,7 @@ disp('Previous distances will not be used in final computations');
 %    save([workingPath 'GPDists.mat'],'GPDists');
 %    save([workingPath 'Flags.mat'],'Flags');
 %else
-Flags('hasDists') = 0;
+%    Flags('hasDists') = 0;
 %end
 save([workingPath 'Flags.mat'],'Flags');
 

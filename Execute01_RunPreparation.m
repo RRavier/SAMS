@@ -29,48 +29,48 @@ end
 
 %% Perform quality check of surfaces
 % Code will stop if at least one mesh is not a manifold
-disp('Checking validity of Surfaces');
-if exist([workingPath 'Flags.mat'])
-    load([workingPath 'Flags.mat']);
-    if isKey(Flags,'AreHomeomorphic')
-        if Flags('AreHomeomorphic') == 0
-            rslt = HomeomorphismCheck(workingPath);
-            if rslt.isDisc == -1
-                Flags('AreHomeomorphic') = 0;
-                save([workingPath 'Flags.mat'],'Flags');
-                error('Script stopping, please fix problems with meshes and then try again.');
-            else
-                Flags('AreHomeomorphic') = 1;
-                Flags('isDisc') = rslt.isDisc;
-                save([workingPath 'Flags.mat'],'Flags');
-            end
-        else
-            disp('Already verified homeomorphisms');
-        end
-    else
-        rslt = HomeomorphismCheck(workingPath);
-        if rslt.isDisc == -1
-            Flags('AreHomeomorphic') = 0;
-            save([workingPath 'Flags.mat'],'Flags');
-            error('Script stopping, please fix problems with meshes and then try again.');
-        else
-            Flags('AreHomeomorphic') = 1;
-            Flags('isDisc') = rslt.isDisc;
-            save([workingPath 'Flags.mat'],'Flags');
-        end
-    end
-else
-    rslt = HomeomorphismCheck(workingPath);
-    if rslt.isDisc == -1
-        Flags('AreHomeomorphic') = 0;
-        save([workingPath 'Flags.mat'],'Flags');
-        error('Script stopping, please fix problems with meshes and then try again.');
-    else
-        Flags('AreHomeomorphic') = 1;
-        Flags('isDisc') = rslt.isDisc;
-        save([workingPath 'Flags.mat'],'Flags');
-    end
-end
+% disp('Checking validity of Surfaces');
+% if exist([workingPath 'Flags.mat'])
+%     load([workingPath 'Flags.mat']);
+%     if isKey(Flags,'AreHomeomorphic')
+%         if Flags('AreHomeomorphic') == 0
+%             rslt = HomeomorphismCheck(workingPath);
+%             if rslt.isDisc == -1
+%                 Flags('AreHomeomorphic') = 0;
+%                 save([workingPath 'Flags.mat'],'Flags');
+%                 error('Script stopping, please fix problems with meshes and then try again.');
+%             else
+%                 Flags('AreHomeomorphic') = 1;
+%                 Flags('isDisc') = rslt.isDisc;
+%                 save([workingPath 'Flags.mat'],'Flags');
+%             end
+%         else
+%             disp('Already verified homeomorphisms');
+%         end
+%     else
+%         rslt = HomeomorphismCheck(workingPath);
+%         if rslt.isDisc == -1
+%             Flags('AreHomeomorphic') = 0;
+%             save([workingPath 'Flags.mat'],'Flags');
+%             error('Script stopping, please fix problems with meshes and then try again.');
+%         else
+%             Flags('AreHomeomorphic') = 1;
+%             Flags('isDisc') = rslt.isDisc;
+%             save([workingPath 'Flags.mat'],'Flags');
+%         end
+%     end
+% else
+%     rslt = HomeomorphismCheck(workingPath);
+%     if rslt.isDisc == -1
+%         Flags('AreHomeomorphic') = 0;
+%         save([workingPath 'Flags.mat'],'Flags');
+%         error('Script stopping, please fix problems with meshes and then try again.');
+%     else
+%         Flags('AreHomeomorphic') = 1;
+%         Flags('isDisc') = rslt.isDisc;
+%         save([workingPath 'Flags.mat'],'Flags');
+%     end
+% end
 
 %% Feature computation for registration step
 % Note: errors may come up at this step, unclear why, please report if one
