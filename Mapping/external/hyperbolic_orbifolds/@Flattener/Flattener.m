@@ -408,7 +408,7 @@ classdef Flattener < handle
             tr=triangulation(obj.flat_T,obj.flat_V);
             binds=tr.freeBoundary();
             binds=unique(binds(:));
-            for iter=1:10000
+            for iter=1:2000
                 
                 x=obj.flat_V';
                 x=x(:);
@@ -430,7 +430,7 @@ classdef Flattener < handle
                 
                 %take the 5-ring neighbourhood of flipped vertices
                 curInds=inds;
-                for r=1:5
+                for r=1:2
                     iinds=find(sum(obj.solver.adj(curInds,:)));
                     inds=[inds;iinds'];
                     curInds=iinds';
@@ -465,6 +465,7 @@ classdef Flattener < handle
                 %                 axis(ax);
                 %                 pause(0.2);
             end
+            error
         end
         
         function fixFlipsDisk(obj)

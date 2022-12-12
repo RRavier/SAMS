@@ -125,7 +125,11 @@ classdef OptimSolverLBFGS_NEW < handle
             end
             
             % init r (implicitychoose H_k^0)
+            prevGamma = obj.gamma_k;
             obj.gamma_k = (obj.s_k(:,1)'*obj.y_k(:,1)) / (obj.y_k(:,1)'*obj.y_k(:,1));
+            if isnan(obj.gamma_k)
+                obj.gamma_k = prevGamma;
+            end
             obj.r = obj.gamma_k * obj.P.apply(obj.q, obj.x);
             
             % compute r
