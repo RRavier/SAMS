@@ -83,6 +83,7 @@ badMeshInds = [];
 
 %% Loop over meshes to extract features
 numDiscs = 0;
+options.isDisc = 0;
 for i = 1:length(Names)%1:length(Names)
     if ismember(i,badInds)
         disp(['Error in mesh ' num2str(i)]);
@@ -106,6 +107,9 @@ for i = 1:length(Names)%1:length(Names)
             error();
         elseif min(size(curBoundary)) == 1
             numDiscs = numDiscs+1;
+            options.isDisc = 1;
+        else
+            options.isDisc = 0;
         end
         [G,Aux] =G.ComputeAuxiliaryInformation(options);
         G.Aux = Aux;
