@@ -1,27 +1,32 @@
 
 %% Set input and output paths, should change for every new dataset
-
+%PLEASE MAKE SURE PATHS END IN SLASH
 % Path of aligned input data. Below structure assumes PuenteAlignment output format
-dataPath = 'C:\Users\rober\Dropbox\TeethData\AnkleWrist\Wrists\NewMeshes\';
+% OFF, PLY, OBJ
+dataPath = 'INSERT\INPUT\PATH\HERE';
+projectDir = 'INSERT\OUTPUT\PATH\HERE';
+numGPLmks = 400; %start with 200 for disc, 400 for sphere
 
-distancePath = '';  %Path of precomputed distances. Not necessary, but may be helpful
+%dataPath = 'C:\Users\rober\PersonalProjects\ToothAndClaw\ToothAndClawData\PNAS\teeth\aligned_output\aligned\';
 
+distancePath = '';  %KEEP BLANK
+%Auto3dgm: GPDists_High.mat
 %Base path for everything in a project, may include multiple groups of
 %nonhomolgous surfaces
-projectDir = 'C:\Users\rober\Dropbox\SAMSResults\Talus_IJCV\';
 
+%projectDir = 'C:\Users\rober\Dropbox\SAMSResults\SAMSDemo_ErrorTeeth\';
 %The path of the current group you are working on, do not change if you are
 %only working with one collection of homologous surfaces
 specimenGroup = 'Default';
-
+%Can ignore if only working with one set of homologous surfaces
 %% Feature information. May need to tune.
 
 %Force recomputation of features, default to 0 (false)
-ForceFeatureRecomputation = 0;
+ForceFeatureRecomputation = 1;
 %Number of Gaussian Process landmarks to draw; these are candidate
 %pseudolandmarks. Choose based on collection, about 4-5 percent of number
 %of vertices sufficient
-numGPLmks = 200;    
+   
 
 %% Pseudolandmark matching parameters. Set and test based on visual output.
 
@@ -32,7 +37,7 @@ numGPLmks = 200;
 featureMap = 'Gauss';
 ForcePutativeMatching = 1;    %Force recomputation of putative matches
 maxDepth = 3;           %Maximum number of links in path, keep between 3-5 for fast computations
-maxNbrSize = 2;         %Amount of uncertainty tolerated in pseudolandmark matching
+maxNbrSize = 1;         %Amount of uncertainty tolerated in pseudolandmark matching
                         %Should be an integer between 1-3.
 
 
@@ -49,7 +54,7 @@ minMatchDist = 0.18;     %Minimum distance needed between any landmarks to estab
 visNumRow = 8;          %When visualizing landmark correspondences,
                         %the number of surfaces to view at once.
 %% Parameters for spherical Hecate only
-numGPLmksHecate = 200;
+numGPLmksHecate = 250;
 featureMapHecate = 'Conf';
 numLmksHecate = 15;
 hecateFeatureInds = 10;
@@ -70,10 +75,10 @@ minPerc = 0.5;          %Minimum relative likelihood needed to establish match.
 percDecr = 0.05;        %Decrement parameter for lowering required relative likelihood
                         %Should be positive, at most minPerc. Smalelr = more
                         %gradual decrement
-pathWtDecr = .995;      %Decrement minimum weight of path considered
+pathWtDecr = .99;      %Decrement minimum weight of path considered
                         %Set between 0 and 1, numbers closer to one result
                         %in slower, higher precision computation
-maxDistTol = 0.18;      %Possibly deprecated
+maxDistTol = 0.12;      %Possibly deprecated
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DO NOT EDIT BELOW
 MappingSetupInternal;
