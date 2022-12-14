@@ -126,6 +126,7 @@ end
 
 if ~isempty(badMeshList)
     Names(unique(badMeshList)) = [];
+    newMeshList(unique(badMeshList)) = [];
 end
 
 save([workingPath 'newMeshList.mat'],'newMeshList');
