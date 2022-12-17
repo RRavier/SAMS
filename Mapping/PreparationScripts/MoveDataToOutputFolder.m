@@ -10,11 +10,15 @@ badOpenPath = [badRawPath 'ProblemsOpeningFile/'];
 touch(badOpenPath);
 Names = {}; options.pointCloud = 0;
 progressbar
-for i = 3:length(dataDir)
+for i = 1:length(dataDir)
+    progressbar((i-1)/(length(dataDir)))
+    if length(dataDir(i).name) < 4
+        continue;
+    end
     try
-        if strcmp(dataDir(i).name(end-2:end),'off') ...
-                || strcmp(dataDir(i).name(end-2:end),'obj') ...
-                || strcmp(dataDir(i).name(end-2:end),'ply')
+        if strcmp(dataDir(i).name(end-3:end),'.off') ...
+                || strcmp(dataDir(i).name(end-3:end),'.obj') ...
+                || strcmp(dataDir(i).name(end-3:end),'.ply')
             Names = [Names dataDir(i).name(1:end-4)];
             switch dataDir(i).name(end-2:end)
                 case 'off'
@@ -23,15 +27,20 @@ for i = 3:length(dataDir)
                     G = Mesh('obj',[dataPath dataDir(i).name]);
                 case 'ply'
                     G = Mesh('ply',[dataPath dataDir(i).name]);
+                otherwise
+                    continue;
             end
             G.Write([rawOFFPath dataDir(i).name(1:end-4) '.off'],'off',options);
             save([rawMATPath dataDir(i).name(1:end-4) '.mat'],'G');
+        else
+            error;
         end
     catch
-        copyfile([dataPath dataDir(i).name],[badOpenPath dataDir(i).name]);
+        continue
     end
-    progressbar((i-2)/(length(dataDir)-2))
+    
 end
+progressbar(1)
 save([workingPath 'RawNames.mat'],'Names');
 
 %This only works with Auto3dgm of old and should be deprecated
