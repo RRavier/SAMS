@@ -134,9 +134,9 @@ if ~isempty(badMeshList)
     disp('These meshes will not be used');
     disp('Please edit the files in the RawOFF output directory to use them');
 end
-if numDiscs == 0  && isempty(badMeshInds)
+if numDiscs == 0
     Flags('isDisc') = 0;
-elseif numDiscs == length(Names) && isempty(badMeshInds)
+elseif numDiscs == length(Names)
     Flags('isDisc') = 1;
 else
     disp('Not all meshes have the same topology. Please check your data to verify whether you want disk or sphere topology.');
