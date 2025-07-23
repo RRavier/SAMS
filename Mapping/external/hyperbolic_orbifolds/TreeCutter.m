@@ -124,8 +124,7 @@ classdef TreeCutter < handle
                 remove_inds=setdiff(remove_inds,[sourceInd targetInd]);
                 A(remove_inds,:)=0;
                 A(:,remove_inds)=0;
-                
-                %[dist,newPath]=graphshortestpath(A,sourceInd, targetInd);
+               
                 gg=graph(A);
                 [newPath,dist]=gg.shortestpath(sourceInd,targetInd);
                 if isinf(dist)

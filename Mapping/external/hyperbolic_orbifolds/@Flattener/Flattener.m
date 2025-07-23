@@ -633,7 +633,7 @@ classdef Flattener < handle
                 i
                 for j=i+1:length(obj.uncut_cone_inds)
                     
-                    A(i,j) = graphshortestpath(G,obj.uncut_cone_inds(i),obj.uncut_cone_inds(j));
+                    [~,A(i,j),~] = shortestpath(G,obj.uncut_cone_inds(i),obj.uncut_cone_inds(j));
                     A(j,i)=A(i,j);
                 end
             end
@@ -674,18 +674,19 @@ classdef Flattener < handle
                 %
                 %
                 for i=1:length(obj.uncut_cone_inds)
-                    d=sqrt(graphshortestpath(G,obj.uncut_cone_inds(i)));
+                    d=sqrt(distances(curGraph,obj.uncut_cone_inds(i)));
                     d=exp(-r*d.^2);
                     D(:,i)=d;
                 end
             else
                 G=adjacency_edge_cost_matrix(obj.M_orig.V',obj.M_orig.F').^2;
+                curGraph = sparse(G);
                 %10 was good
                 if nargin<3
                     r=25;
                 end
                 for i=1:length(obj.uncut_cone_inds)
-                    d=sqrt(graphshortestpath(G,obj.uncut_cone_inds(i)));
+                    d=sqrt(distances(curGraph,obj.uncut_cone_inds(i)));
                     d=exp(-r*d.^2);
                     D(:,i)=d;
                 end

@@ -6,12 +6,12 @@ n=size(A,2);
 m=length(tind);
 
 D = zeros(m,n);
-
+graphA = graph(sparse(A));
 disp('using Dijkstra to determine image of boundary...')
 progressbar
 for k=1:m
     
-    [dists, path, pred]=graphshortestpath(A,tind(k), 'Directed', 'False' ,'Method', 'Dijkstra');
+    dists=distances(graphA,tind(k));
     D(k,:) = dists; 
     progressbar(k/m);
 end

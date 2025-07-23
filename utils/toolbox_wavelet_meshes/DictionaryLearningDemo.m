@@ -144,11 +144,11 @@ for i = startMesh:finalMesh-1
         basisToAdd(admissibleLmks)=1;
         curDict = cat(2,curDict,basisToAdd);
     end
-    
+    graphWtA = graph(weightedAdj);
     %now edges
     for j = 1:length(admissibleLmks)
         for k = (j+1):length(admissibleLmks)
-            [~,path,]=graphshortestpath(weightedAdj,admissibleLmks(j),admissibleLmks(k));
+            path=shortestpath(graphWtA,admissibleLmks(j),admissibleLmks(k));
             basisToAdd = zeros(progMeshList{i+1}.nV,1);
             basisToAdd(path)=1;
             curDict = cat(2,curDict,basisToAdd);
@@ -160,9 +160,9 @@ for i = startMesh:finalMesh-1
     for j = 1:length(admissibleLmks)
         for k = (j+1):length(admissibleLmks)
             for p = (j+2):length(admissibleLmks)
-                [~,path12,]=graphshortestpath(weightedAdj,admissibleLmks(j),admissibleLmks(k));
-                [~,path23,]=graphshortestpath(weightedAdj,admissibleLmks(k),admissibleLmks(p));
-                [~,path31,]=graphshortestpath(weightedAdj,admissibleLmks(p),admissibleLmks(j));
+                path12=shortestpath(weightedAdj,admissibleLmks(j),admissibleLmks(k));
+                path23=shortestpath(weightedAdj,admissibleLmks(k),admissibleLmks(p));
+                path31=shortestpath(weightedAdj,admissibleLmks(p),admissibleLmks(j));
                 basisToAdd = zeros(progMeshList{i+1}.nV,1);
                 finalPath = [path12 path23(2:end) path31(2:end)];
                 [in,on] = inpolygon(progFlatMeshList{i}.V(1,:)',progFlatMeshList{i}.V(2,:)',...
