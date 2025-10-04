@@ -48,7 +48,7 @@ end
 
 %% Get patches based on ridges: ridges defined by geodesics between two lmks
 disp('Drawing Anisotropic patches')
-weightedGraph = meanMesh.A.*pdist2(meanMesh.V',meanMesh.V');
+weightedGraph = graph(meanMesh.A.*pdist2(meanMesh.V',meanMesh.V'));
 
 totalNumWalksAniso = sparse(newMeshList{1}.nV,newMeshList{1}.nV);
 progressbar;
@@ -61,7 +61,7 @@ for i = 1:length(lmks)
     for j = i+1:length(lmks)
         progressbar(cnt/length(anisoPatchInds));
         cnt = cnt + 1;
-        [~,curPath,~] = graphshortestpath(weightedGraph,lmks(i),lmks(j));
+        [curPath,~,~] = shortestpath(weightedGraph,lmks(i),lmks(j));
         curInds = [];
         for k = 1:length(curPath)
             curInds = [curInds find(totalNumWalksAniso(curPath(k),:))];

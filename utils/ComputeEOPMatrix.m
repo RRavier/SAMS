@@ -11,6 +11,7 @@ function Flows = ComputeEOPMatrix(dists,sourceInds,sinkInds)
 
 [m,n] = size(dists);
 dists = .5*dists+.5*dists';         %symmetrize as sanity check
+graphDists = graph(dists);
 Flows = cell(length(sourceInds),length(sinkInds));
 
 progressbar
@@ -20,8 +21,8 @@ for i = 1:length(sourceInds)
         Flows{i,j} = sparse(m,n);
         if sourceInds(i) ~= sinkInds(j)
             dummy = sparse(m,n);
-            d_i = graphshortestpath(sparse(dists),sourceInds(i));
-            d_j = graphshortestpath(sparse(dists),sinkInds(j));
+            d_i = distances(graphDists,sourceInds(i));
+            d_j = distances(graphDists,sinkInds(j));
             for k = 1:m
                 for q = 1:n
                     if d_i(k) < d_i(q)

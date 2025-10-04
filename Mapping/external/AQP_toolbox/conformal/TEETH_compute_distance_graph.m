@@ -6,10 +6,10 @@ n=size(A,2);
 m=length(tind);
 
 D = zeros(m,n);
-
+curGraph = graph(sparse(A));
 disp('using Dijkstra to determine image of boundary...')
 for k=1:m
     progressbar(k,m,40);
-    [dists, path, pred]=graphshortestpath(A,tind(k), 'Directed', 'false' ,'Method', 'Dijkstra');
+    dists=distances(curGraph,tind(k));
     D(k,:) = dists;    
 end
