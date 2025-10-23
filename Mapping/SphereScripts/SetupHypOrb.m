@@ -13,8 +13,14 @@ for i = 1:length(Names)
     load([workingPath 'ProcessedMAT/' Names{i} '.mat']);
     meshList{i} = G;
 end
-frechMean = find(min(sum(GPDists.^2))==sum(GPDists.^2));
+[~, frechMean] = min(sum(GPDists.^2));
+
+disp(['Names length: ' num2str(length(Names))])
+disp(['frechMean: ' num2str(frechMean)])
+disp(['GPDists size: ' mat2str(size(GPDists))])
+disp(['matchesPairs length: ' num2str(length(matchesPairs))])
 for i = 1:length(Names)
+    fprintf('Processing %d / %d: %s\n', i, length(Names), Names{i});
     if i~=frechMean
         dirString = [orbDataPath Names{i} '__To__' Names{frechMean} '/'];
         if ~exist(dirString,'dir')
