@@ -21,8 +21,8 @@ for i = 1:length(sourceInds)
         Flows{i,j} = sparse(m,n);
         if sourceInds(i) ~= sinkInds(j)
             dummy = sparse(m,n);
-            d_i = distances(graphDists,sourceInds(i));
-            d_j = distances(graphDists,sinkInds(j));
+            d_i = distances(distGraph,sourceInds(i));
+            d_j = distances(distGraph,sinkInds(j));
             for k = 1:m
                 for q = 1:n
                     if d_i(k) < d_i(q)
