@@ -13,7 +13,7 @@ for i = 1:length(Names)
         
         [bd_i,~] = meshList{i}.FindOrientedBoundaries;
         rowsToDel = [];
-        for j = 1:size(featureMatchesPairs{i})
+        for j = 1:size(featureMatchesPairs{i},1)
             if ismember(featureMatchesPairs{i}(j,1),bd_i) || ismember(featureMatchesPairs{i}(j,2),bd_f)
                 rowsToDel = [rowsToDel j];
             end
