@@ -31,7 +31,7 @@ if ~isfield(Flags,'PutativeMatchesComputed') || ForcePutativeMatching
         rowsToDel = [];
         if i ~= frechMean
             [bd_i,~] = meshList{i}.FindOrientedBoundaries;
-            for j = 1:size(matchesPairs{i})
+            for j = 1:size(matchesPairs{i},1)
                 if ismember(matchesPairs{i}(j,1),bd_i) || ismember(matchesPairs{i}(j,2),bd_f)
                     rowsToDel = [rowsToDel j];
                 end
