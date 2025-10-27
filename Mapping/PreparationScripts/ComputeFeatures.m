@@ -92,6 +92,23 @@ for i = 1:length(Names)%1:length(Names)
         continue
     end
     if exist([workingPath 'ProcessedMAT/' Names{i} '.mat'],'file') > 0
+        load([workingPath 'ProcessedMAT/' Names{i} '.mat']);
+        try
+            curBoundary = G.FindOrientedBoundaries();
+            if min(size(curBoundary)) > 1
+                disp('Current mesh is not simply connected, skipping');
+                error();
+            elseif min(size(curBoundary)) == 1
+                numDiscs = numDiscs+1;
+                options.isDisc = 1;
+            else
+                options.isDisc = 0;
+            end
+        catch
+            disp(['Error in mesh ' num2str(i)]);
+            badMeshInds = [badMeshInds i];
+            badMeshList = [badMeshList Names{i}];
+        end
         disp('Mesh already processed, continuing...')
         continue;
     end
@@ -134,15 +151,15 @@ if ~isempty(badMeshList)
     disp('These meshes will not be used');
     disp('Please edit the files in the RawOFF output directory to use them');
 end
-if numDiscs == 0
+if numDiscs < length(Names)/2
     Flags('isDisc') = 0;
-elseif numDiscs == length(Names)
-    Flags('isDisc') = 1;
 else
+    Flags('isDisc') = 1;
+end
+if (numDiscs ~= 0 || numDiscs ~= length(Names))
     disp('Not all meshes have the same topology. Please check your data to verify whether you want disk or sphere topology.');
 end
 save([workingPath 'Names.mat'],'Names');
 save([workingPath 'Flags.mat'],'Flags');
 
 %% Saving
-
